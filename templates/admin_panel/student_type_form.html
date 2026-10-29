@@ -1,0 +1,57 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} - MediDine Admin{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="content-header">
+        <div>
+            <h1 class="content-title">{{ title }}</h1>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'student_type_list' %}" class="btn-magento-secondary">← Back</a>
+            <button type="submit" class="btn-magento-primary">Save Student Type</button>
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="magento-alert magento-alert-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="magento-card">
+        <div class="magento-card-header">
+            <h2 class="magento-card-title">Student Classification Information</h2>
+        </div>
+
+        <div class="magento-fieldset">
+            <!-- Student Type Name -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Student Type Name</label>
+                <div>
+                    {{ form.name }}
+                    <span class="magento-field-note">e.g. Monthly Basis or Meal Basis (Pay-per-meal)</span>
+                    {% if form.name.errors %}
+                        <span class="magento-field-error">{{ form.name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Description</label>
+                <div>
+                    {{ form.description }}
+                    <span class="magento-field-note">Specify dining privileges, billing frequency, or meal conditions</span>
+                    {% if form.description.errors %}
+                        <span class="magento-field-error">{{ form.description.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

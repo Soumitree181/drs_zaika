@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Restricted — Doctor's Zaika</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('medidine_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+</head>
+<body class="access-denied-body" style="display: flex; align-items: center; justify-content: center;">
+    <div style="width: 100%; max-width: 500px;">
+        <div style="text-align: center; margin-bottom: 24px;">
+            <div class="login-logo-container" style="margin-bottom: 10px;">
+                <img src="{% static 'images/logo.png' %}" alt="Doctor's Zaika @ Singha's Den" class="login-logo-img" style="width: 76px; height: 76px;">
+            </div>
+            <h1 class="login-brand-title" style="font-size: 20px;">Doctor's Zaika Administration</h1>
+            <p class="login-brand-subtitle">GMCH Sundargarh</p>
+        </div>
+
+        <div class="magento-card" style="border-radius: 8px; padding: 36px 30px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4); text-align: center;">
+            <div style="font-size: 44px; margin-bottom: 12px;">🚫</div>
+            <h2 style="font-size: 19px; font-weight: 700; color: var(--med-text-heading); margin-bottom: 10px;">
+                Student Access Restricted
+            </h2>
+            <p style="color: var(--med-text-muted); font-size: 13.5px; line-height: 1.6; margin-bottom: 20px;">
+                Your account is registered as a <strong>Medical Student</strong>. Students are not authorized to view the admin panel or perform operations in this portal.
+            </p>
+
+            <div style="background: var(--med-user-pill-bg); border: 1px solid var(--med-border); border-radius: 6px; padding: 14px; margin-bottom: 24px; font-size: 12.5px; color: var(--med-text-main); text-align: left;">
+                <div>Logged in user: <strong>{{ user.username }}</strong></div>
+                <div style="margin-top: 5px;">Role: <span class="role-badge role-student">Student</span></div>
+                <div style="margin-top: 6px; color: var(--med-text-muted);">Administrative operations are restricted exclusively to <strong>Canteen Staff</strong> and <strong>Partners</strong>.</div>
+            </div>
+
+            <a href="{% url 'logout' %}" class="btn-magento-primary" style="display: inline-flex; justify-content: center; width: 100%; padding: 10px; font-weight: 700;">
+                Sign Out / Switch Account
+            </a>
+        </div>
+    </div>
+</body>
+</html>

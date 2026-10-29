@@ -1,0 +1,91 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} - MediDine Admin{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="content-header">
+        <div>
+            <h1 class="content-title">{{ title }}</h1>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'role_list' %}" class="btn-magento-secondary">← Back</a>
+            <button type="submit" class="btn-magento-primary">Save User Role</button>
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="magento-alert magento-alert-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="magento-card">
+        <div class="magento-card-header">
+            <h2 class="magento-card-title">User Role Configuration & Permissions</h2>
+        </div>
+
+        <div class="magento-fieldset">
+            <!-- Role Name -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Role Name</label>
+                <div>
+                    {{ form.name }}
+                    <span class="magento-field-note">e.g. Partner / Investor, Canteen Staff, Student, Administrator</span>
+                    {% if form.name.errors %}
+                        <span class="magento-field-error">{{ form.name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Role Code -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Role Code Identifier</label>
+                <div>
+                    {{ form.code }}
+                    <span class="magento-field-note">Uppercase unique key, e.g. <code>PARTNER</code>, <code>STAFF</code>, <code>STUDENT</code>, <code>ADMIN</code></span>
+                    {% if form.code.errors %}
+                        <span class="magento-field-error">{{ form.code.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Role Description</label>
+                <div>
+                    {{ form.description }}
+                    <span class="magento-field-note">Summary of scope, duties, or operational access</span>
+                    {% if form.description.errors %}
+                        <span class="magento-field-error">{{ form.description.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Permission: Admin Panel Access -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Admin Panel Access</label>
+                <div style="display: flex; align-items: center; gap: 8px; padding-top: 6px;">
+                    {{ form.can_access_admin }}
+                    <label for="{{ form.can_access_admin.id_for_label }}" style="font-size: 13px;">
+                        Allow users with this role to access and log into the Admin Panel (Checked for Partners & Staff, Unchecked for Students)
+                    </label>
+                </div>
+            </div>
+
+            <!-- Permission: Can Manage Users -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">User Management Privilege</label>
+                <div style="display: flex; align-items: center; gap: 8px; padding-top: 6px;">
+                    {{ form.can_manage_users }}
+                    <label for="{{ form.can_manage_users.id_for_label }}" style="font-size: 13px;">
+                        Allow creating, modifying, and assigning user roles (Restricted to Partners & Admins)
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

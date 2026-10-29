@@ -1,0 +1,167 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} — Doctor's Zaika{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">{{ title }}</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Log meal purchase for non-subscription walk-in students (Batch, Roll No, Diet, Price, Mobile Last 3 digits, Payment Mode).
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'non_sub_register' %}" class="btn-magento-secondary">
+            ← Back to Register
+        </a>
+    </div>
+</div>
+
+<div style="max-width: 680px;">
+    <div class="magento-card" style="padding: 28px 24px;">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="magento-alert magento-alert-error" style="margin-bottom: 20px;">
+                    Please correct the errors indicated below.
+                </div>
+            {% endif %}
+
+            <!-- Date & Meal Time -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Date of Meal *
+                    </label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.date.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Meal Type *
+                    </label>
+                    {{ form.meal_type }}
+                    {% if form.meal_type.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.meal_type.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Batch & Roll Number -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Student Batch *
+                    </label>
+                    {{ form.batch }}
+                    <span style="font-size: 11px; color: var(--med-text-muted); margin-top: 2px; display: block;">
+                        e.g. MBBS 2023, BDS 2022, Nursing 2024
+                    </span>
+                    {% if form.batch.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.batch.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Roll Number *
+                    </label>
+                    {{ form.roll_number }}
+                    <span style="font-size: 11px; color: var(--med-text-muted); margin-top: 2px; display: block;">
+                        e.g. MBBS-2023-045 or 045
+                    </span>
+                    {% if form.roll_number.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.roll_number.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Diet Preference & Price -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Veg / Non-Veg *
+                    </label>
+                    {{ form.diet }}
+                    {% if form.diet.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.diet.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Price Charged (₹) *
+                    </label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--med-text-muted); font-weight: 600;">₹</span>
+                        {{ form.price }}
+                    </div>
+                    <!-- Quick Preset Buttons -->
+                    <div style="display: flex; gap: 6px; margin-top: 6px;">
+                        <button type="button" class="btn-magento-secondary btn-xs" onclick="document.getElementById('id_price').value='50.00'">₹50</button>
+                        <button type="button" class="btn-magento-secondary btn-xs" onclick="document.getElementById('id_price').value='80.00'">₹80</button>
+                        <button type="button" class="btn-magento-secondary btn-xs" onclick="document.getElementById('id_price').value='100.00'">₹100</button>
+                        <button type="button" class="btn-magento-secondary btn-xs" onclick="document.getElementById('id_price').value='120.00'">₹120</button>
+                    </div>
+                    {% if form.price.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.price.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mobile Last 3 Digits & Payment Mode -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Last 3 Digits of Mobile Number *
+                    </label>
+                    {{ form.mobile_last_3 }}
+                    <span style="font-size: 11px; color: var(--med-text-muted); margin-top: 2px; display: block;">
+                        Exact 3 numeric digits (e.g. 849)
+                    </span>
+                    {% if form.mobile_last_3.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.mobile_last_3.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                        Mode of Payment *
+                    </label>
+                    {{ form.payment_mode }}
+                    <span style="font-size: 11px; color: var(--med-text-muted); margin-top: 2px; display: block;">
+                        Online (UPI / QR) or Cash
+                    </span>
+                    {% if form.payment_mode.errors %}
+                        <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.payment_mode.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 12.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 6px;">
+                    Remarks / Items Taken / UPI Ref (Optional)
+                </label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div style="color: #ef4444; font-size: 11.5px; margin-top: 4px;">{{ form.notes.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; border-top: 1px solid var(--med-border); padding-top: 20px;">
+                <button type="submit" class="btn-magento-primary">
+                    {% if edit_mode %}Save Changes{% else %}Record Student Meal{% endif %}
+                </button>
+                <a href="{% url 'non_sub_register' %}" class="btn-magento-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

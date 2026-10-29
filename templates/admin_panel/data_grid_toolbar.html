@@ -1,0 +1,111 @@
+<!-- Clean Data Grid Toolbar & Search Controls -->
+<div class="admin-data-grid-toolbar" id="toolbar_{{ grid_id|default:'grid' }}">
+    <!-- Row 1: Search by keyword & Action buttons -->
+    <div class="data-grid-toolbar-row-1">
+        <!-- Left: Search by keyword Form -->
+        <form method="get" class="data-grid-search-control" id="searchForm_{{ grid_id|default:'grid' }}">
+            {% for key, val in request.GET.items %}
+            {% if key != 'q' and key != 'page' and key != page_param|default:'page' %}
+            <input type="hidden" name="{{ key }}" value="{{ val }}">
+            {% endif %}
+            {% endfor %}
+            <input type="text" name="q" value="{{ q|default:'' }}"
+                placeholder="{{ search_placeholder|default:'Search by keyword' }}" class="data-grid-search-input"
+                autocomplete="off"
+                title="{{ search_tooltip|default:search_placeholder|default:'Search by keyword and press Enter' }}">
+            <button type="submit" class="data-grid-search-btn" title="Search">
+                <svg viewBox="0 0 24 24"
+                    style="width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;">
+                    <circle cx="10.5" cy="10.5" r="6.5"></circle>
+                    <line x1="15.5" y1="15.5" x2="20.5" y2="20.5"></line>
+                </svg>
+            </button>
+            {% if q %}
+            <a href="?{% for key, val in request.GET.items %}{% if key != 'q' and key != 'page' and key != page_param|default:'page' %}{{ key }}={{ val }}&{% endif %}{% endfor %}"
+                class="data-grid-search-clear" title="Clear search filter">&times;</a>
+            {% endif %}
+        </form>
+
+        <!-- Right: Export Dropdown -->
+        <div class="data-grid-actions-right">
+            <div class="grid-dropdown-wrap">
+                <button type="button" class="btn-grid-dropdown" onclick="toggleGridDropdown(this)">
+                    <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; fill: currentColor;">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+                    </svg>
+                    <span>Export</span>
+                    <span style="font-size: 8px; margin-left: 2px;">&#9660;</span>
+                </button>
+                <div class="grid-dropdown-menu">
+                    <a href="javascript:void(0)" class="grid-dropdown-item"
+                        onclick="exportGridTableToCSV('{{ table_id|default:'dataTable' }}', '{{ export_filename|default:'export' }}')">Export
+                        CSV</a>
+                    <a href="javascript:void(0)" class="grid-dropdown-item" onclick="window.print()">Print Grid</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Records Count & Pagination (Actions dropdown removed, Custom page size added) -->
+    <div class="data-grid-toolbar-row-2">
+        <!-- Left: Records count -->
+        <div class="data-grid-row-2-left">
+            <span class="grid-records-count">
+                <strong>{{ page_obj.paginator.count|default:0 }}</strong> records found
+                {% if q %}<span style="color: var(--med-teal-primary); margin-left: 4px;">for "{{ q }}"</span>{% endif %}
+            </span>
+        </div>
+
+        <!-- Right: Pagination controls with Custom Page Size -->
+        <div class="data-grid-row-2-right">
+            <!-- Per page select with Custom option -->
+            <select class="grid-control-select grid-per-page-select" data-current="{{ per_page|default:20 }}"
+                onchange="changeGridPerPage(this, '{{ page_param|default:'page' }}')" title="Items per page">
+                <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                <option value="20" {% if per_page == 20 or not per_page %}selected{% endif %}>20</option>
+                <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                {% if per_page and per_page != 10 and per_page != 20 and per_page != 50 and per_page != 100 %}
+                <option value="{{ per_page }}" selected>{{ per_page }} (Custom)</option>
+                {% endif %}
+                <option value="custom">Custom...</option>
+            </select>
+            <span class="grid-per-page-label">per page</span>
+            <button type="button" class="btn-custom-size"
+                onclick="promptCustomPageSize('{{ page_param|default:'page' }}', '{{ per_page|default:20 }}')"
+                title="Set custom page size">
+                Custom
+            </button>
+
+            <!-- Prev button -->
+            {% if page_obj.has_previous %}
+            <a href="?{% for key, val in request.GET.items %}{% if key != page_param|default:'page' %}{{ key }}={{ val }}&{% endif %}{% endfor %}{{ page_param|default:'page' }}={{ page_obj.previous_page_number }}"
+                class="grid-page-btn" title="Previous Page">&lt;</a>
+            {% else %}
+            <span class="grid-page-btn disabled">&lt;</span>
+            {% endif %}
+
+            <!-- Current page jump input -->
+            <form method="get" style="display: inline-flex; margin: 0;"
+                onsubmit="return handlePageJump(this, '{{ page_param|default:'page' }}', {{ page_obj.paginator.num_pages|default:1 }})">
+                {% for key, val in request.GET.items %}
+                {% if key != page_param|default:'page' %}
+                <input type="hidden" name="{{ key }}" value="{{ val }}">
+                {% endif %}
+                {% endfor %}
+                <input type="text" name="{{ page_param|default:'page' }}" value="{{ page_obj.number|default:1 }}"
+                    class="grid-page-input" title="Jump to page (press Enter)">
+            </form>
+
+            <span class="grid-page-total">of {{ page_obj.paginator.num_pages|default:1 }}</span>
+
+            <!-- Next button -->
+            {% if page_obj.has_next %}
+            <a href="?{% for key, val in request.GET.items %}{% if key != page_param|default:'page' %}{{ key }}={{ val }}&{% endif %}{% endfor %}{{ page_param|default:'page' }}={{ page_obj.next_page_number }}"
+                class="grid-page-btn" title="Next Page">&gt;</a>
+            {% else %}
+            <span class="grid-page-btn disabled">&gt;</span>
+            {% endif %}
+        </div>
+    </div>
+</div>

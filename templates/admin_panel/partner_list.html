@@ -1,0 +1,85 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Partners - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Partners</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Canteen partners list and spend overview. Click <strong>View</strong> to see a partner's details and spend history.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'partner_create' %}" class="btn-magento-secondary">
+            + Add Partner
+        </a>
+        <a href="{% url 'investment_create' %}" class="btn-magento-primary">
+            + Add Spend
+        </a>
+    </div>
+</div>
+
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="partners" table_id="partnersTable" export_filename="partners" search_placeholder="Search by keyword" search_tooltip="Search by name, username, phone, or email" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="partnersTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>Partner Name</th>
+                    <th>Username</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th style="text-align: right; width: 160px;">Total Spend</th>
+                    <th style="text-align: right; width: 220px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in partners_data %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12px; font-variant-numeric: tabular-nums;">
+                        {{ item.user.id }}
+                    </td>
+                    <td>
+                        <a href="{% url 'partner_detail' item.user.pk %}" class="table-link-main">
+                            {{ item.user.get_full_name|default:item.user.username }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="table-sub-text" style="font-family: ui-monospace, monospace; font-size: 12px;">@{{ item.user.username }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted); font-variant-numeric: tabular-nums;">
+                        {{ item.user.phone|default:"—" }}
+                    </td>
+                    <td style="color: var(--med-text-muted);">
+                        {{ item.user.email|default:"—" }}
+                    </td>
+                    <td class="cell-amount">
+                        ₹{{ item.total_spend|floatformat:2 }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'partner_detail' item.user.pk %}" class="btn-magento-secondary btn-xs">
+                            View
+                        </a>
+                        <a href="{% url 'investment_create' %}?partner_id={{ item.user.pk }}" class="btn-magento-secondary btn-xs" style="margin-left: 4px;">
+                            + Add Spend
+                        </a>
+                        <a href="{% url 'user_edit' item.user.pk %}" class="btn-magento-secondary btn-xs" style="margin-left: 4px;">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        No partners added yet. Click <strong>+ Add Partner</strong> to create one.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

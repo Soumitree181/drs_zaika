@@ -1,0 +1,121 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} - MediDine Admin{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="content-header">
+        <div>
+            <h1 class="content-title">{{ title }}</h1>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'user_list' %}" class="btn-magento-secondary">← Back</a>
+            <button type="submit" class="btn-magento-primary">Save User</button>
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="magento-alert magento-alert-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="magento-card">
+        <div class="magento-card-header">
+            <h2 class="magento-card-title">User Account Information</h2>
+        </div>
+
+        <div class="magento-fieldset">
+            <!-- Username -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Username</label>
+                <div>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <span class="magento-field-error">{{ form.username.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Assigned Role -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Assigned Role</label>
+                <div>
+                    {{ form.role }}
+                    <span class="magento-field-note">Assign system role: Partner / Investor, Canteen Staff, Student, or Administrator</span>
+                    {% if form.role.errors %}
+                        <span class="magento-field-error">{{ form.role.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- First Name -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">First Name</label>
+                <div>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}
+                        <span class="magento-field-error">{{ form.first_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Last Name</label>
+                <div>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                        <span class="magento-field-error">{{ form.last_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Email Address</label>
+                <div>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <span class="magento-field-error">{{ form.email.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Phone Number</label>
+                <div>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <span class="magento-field-error">{{ form.phone.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="magento-form-row">
+                <label class="magento-form-label {% if not edit_mode %}required{% endif %}">Password</label>
+                <div>
+                    {{ form.password }}
+                    <span class="magento-field-note">{{ form.password.help_text }}</span>
+                    {% if form.password.errors %}
+                        <span class="magento-field-error">{{ form.password.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Status Active -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Active Status</label>
+                <div style="display: flex; align-items: center; gap: 8px; padding-top: 6px;">
+                    {{ form.is_active }}
+                    <label for="{{ form.is_active.id_for_label }}" style="font-size: 13px;">User is Active</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

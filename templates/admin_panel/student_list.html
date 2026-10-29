@@ -1,0 +1,97 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Students & Meal Tracking - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Students & Meal Subscriptions</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Student roster and feeding status. Click <strong>View</strong> to track daily 3-time meals (Breakfast, Lunch, Dinner) and view attendance history.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'student_create' %}" class="btn-magento-primary">
+            + Add New Student
+        </a>
+    </div>
+</div>
+
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="students" table_id="studentsTable" export_filename="students" search_placeholder="Search by keyword" search_tooltip="Search by name, roll no, department, or phone" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="studentsTable">
+            <thead>
+                <tr>
+                    <th style="width: 140px;">Roll Number</th>
+                    <th>Student Name</th>
+                    <th>Subscription Scheme</th>
+                    <th>Dept & Batch</th>
+                    <th style="width: 170px;">{{ current_month_name }} Feed Status</th>
+                    <th style="width: 150px;">All-Time Records</th>
+                    <th style="text-align: right; width: 180px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>
+                        <a href="{% url 'student_detail' s.pk %}" class="table-link-main student-roll">
+                            {{ s.roll_number }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'student_detail' s.pk %}" class="table-link-main">
+                            {{ s.user.get_full_name|default:s.user.username }}
+                        </a>
+                        <div class="table-sub-text">@{{ s.user.username }}</div>
+                    </td>
+                    <td>
+                        {% if s.student_type %}
+                        <span class="classy-tag">
+                            {{ s.student_type.name }}
+                        </span>
+                        {% else %}
+                        <span class="text-unassigned">No Scheme</span>
+                        {% endif %}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px;">
+                        {{ s.department|default:"—" }}{% if s.batch %} &bull; {{ s.batch }}{% endif %}
+                    </td>
+                    <td>
+                        <span class="table-primary-text" style="font-variant-numeric: tabular-nums;">
+                            {{ s.curr_total_meals }} meals
+                        </span>
+                        <div class="table-sub-text" style="font-variant-numeric: tabular-nums;">
+                            {{ s.curr_days }} days attended
+                        </div>
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px; font-variant-numeric: tabular-nums;">
+                        <span style="font-weight: 500; color: var(--med-text-main);">{{ s.all_total_meals }} meals</span>
+                        <div class="table-sub-text">{{ s.all_days }} days</div>
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'student_detail' s.pk %}" class="btn-magento-secondary btn-xs">
+                            View
+                        </a>
+                        <a href="{% url 'student_edit' s.pk %}" class="btn-magento-secondary btn-xs" style="margin-left: 4px;">
+                            Edit
+                        </a>
+                        <a href="{% url 'student_delete' s.pk %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        We couldn't find any student records. Click <strong>+ Add New Student</strong> to enroll students.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} - MediDine Admin{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    <div class="content-header">
+        <div>
+            <h1 class="content-title">{{ title }}</h1>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'student_list' %}" class="btn-magento-secondary">← Back</a>
+            <button type="submit" class="btn-magento-primary">Save Student</button>
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="magento-alert magento-alert-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="magento-card">
+        <div class="magento-card-header">
+            <h2 class="magento-card-title">Student Medical College & Dining Scheme Assignment</h2>
+        </div>
+
+        <div class="magento-fieldset">
+            <!-- Linked User Account -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Linked User Account</label>
+                <div>
+                    {{ form.user }}
+                    <span class="magento-field-note">Select the user login account for this student</span>
+                    {% if form.user.errors %}
+                        <span class="magento-field-error">{{ form.user.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Assigned Student Type -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Assigned Student Type</label>
+                <div>
+                    {{ form.student_type }}
+                    <span class="magento-field-note">Assign dining scheme: Monthly Basis, Meal Basis (Pay-per-meal), etc.</span>
+                    {% if form.student_type.errors %}
+                        <span class="magento-field-error">{{ form.student_type.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Roll Number -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Roll / Enrollment Number</label>
+                <div>
+                    {{ form.roll_number }}
+                    <span class="magento-field-note">e.g. MBBS-2023-045</span>
+                    {% if form.roll_number.errors %}
+                        <span class="magento-field-error">{{ form.roll_number.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Department -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Medical Department</label>
+                <div>
+                    {{ form.department }}
+                    <span class="magento-field-note">e.g. General Medicine, Pediatrics, Surgery</span>
+                    {% if form.department.errors %}
+                        <span class="magento-field-error">{{ form.department.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Batch -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Batch / Academic Year</label>
+                <div>
+                    {{ form.batch }}
+                    <span class="magento-field-note">e.g. MBBS Batch 2023, PG Resident</span>
+                    {% if form.batch.errors %}
+                        <span class="magento-field-error">{{ form.batch.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,385 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ student.user.get_full_name|default:student.user.username }} ({{ student.roll_number }}) - Feeding Status{% endblock %}
+
+{% block content %}
+<!-- Content Header -->
+<div class="content-header">
+    <div>
+        <div style="font-size: 12px; color: var(--med-text-muted); margin-bottom: 4px;">
+            <a href="{% url 'student_list' %}" class="table-link-main">&larr; Back to Students List</a>
+        </div>
+        <h1 class="content-title">
+            {{ student.user.get_full_name|default:student.user.username }}
+        </h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Student Roll No: <strong style="color: var(--med-text-main);">{{ student.roll_number }}</strong>
+            &bull; Scheme: <strong style="color: var(--med-text-main);">{{ student.student_type.name|default:"Unassigned" }}</strong>
+            {% if student.is_monthly_subscriber %}
+                <span class="classy-tag" style="margin-left: 6px;">3 Meals / Day Included</span>
+            {% endif %}
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'student_list' %}" class="btn-magento-secondary">
+            Students List
+        </a>
+        <a href="{% url 'student_edit' student.pk %}" class="btn-magento-primary">
+            Edit Student
+        </a>
+    </div>
+</div>
+
+<!-- Student Profile Information Card -->
+<div class="magento-card" style="padding: 18px 24px; margin-bottom: 22px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Roll Number
+            </div>
+            <div style="font-size: 14px; font-weight: 600; color: var(--med-text-main); margin-top: 4px; font-variant-numeric: tabular-nums;">
+                {{ student.roll_number }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Account Username
+            </div>
+            <div style="margin-top: 4px;">
+                <span class="classy-tag">@{{ student.user.username }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Subscription Scheme
+            </div>
+            <div style="font-size: 13.5px; font-weight: 600; color: var(--med-text-main); margin-top: 4px;">
+                {{ student.student_type.name|default:"None Assigned" }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Department & Batch
+            </div>
+            <div style="font-size: 13.5px; color: var(--med-text-main); margin-top: 4px;">
+                {{ student.department|default:"—" }}{% if student.batch %} &bull; {{ student.batch }}{% endif %}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Phone & Email
+            </div>
+            <div style="font-size: 12.5px; color: var(--med-text-muted); margin-top: 4px;">
+                {{ student.user.phone|default:"—" }} &bull; {{ student.user.email|default:"—" }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Daily Meal Logger (3 Meal Checkboxes) -->
+<div class="magento-card" style="margin-bottom: 24px;">
+    <div class="magento-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+            <h2 class="magento-card-title" style="margin: 0;">
+                Daily Meal Logger (3 Meals / Day)
+            </h2>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 2px;">
+                Tick the boxes to record meal consumption for <strong>{{ selected_log_date|date:"l, F d, Y" }}</strong>.
+            </div>
+        </div>
+        <div>
+            <!-- Date switcher for logging -->
+            <form method="get" action="{% url 'student_detail' student.pk %}" style="display: flex; align-items: center; gap: 8px;">
+                <label style="font-size: 11.5px; font-weight: 600; color: var(--med-text-muted); text-transform: uppercase;">Service Date:</label>
+                <input type="date" name="log_date" value="{{ selected_log_date_str }}" class="scope-select" onchange="this.form.submit()">
+            </form>
+        </div>
+    </div>
+
+    <form method="post" action="{% url 'student_meal_log' student.pk %}" style="padding: 22px 24px;">
+        {% csrf_token %}
+        <input type="hidden" name="date" value="{{ selected_log_date_str }}">
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 20px;">
+            <!-- 1. Breakfast Checkbox -->
+            <label style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border: 1px solid var(--med-border); background: var(--med-card-subtle); cursor: pointer; user-select: none;">
+                <input type="checkbox" name="breakfast" {% if target_meal_record.breakfast %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                <div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--med-text-main);">
+                        Breakfast (Morning)
+                    </div>
+                    <div style="font-size: 11.5px; color: var(--med-text-muted); margin-top: 2px;">
+                        Morning tea, breakfast buffet
+                    </div>
+                </div>
+            </label>
+
+            <!-- 2. Lunch Checkbox -->
+            <label style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border: 1px solid var(--med-border); background: var(--med-card-subtle); cursor: pointer; user-select: none;">
+                <input type="checkbox" name="lunch" {% if target_meal_record.lunch %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                <div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--med-text-main);">
+                        Lunch (Afternoon)
+                    </div>
+                    <div style="font-size: 11.5px; color: var(--med-text-muted); margin-top: 2px;">
+                        Full canteen afternoon meal
+                    </div>
+                </div>
+            </label>
+
+            <!-- 3. Dinner Checkbox -->
+            <label style="display: flex; align-items: center; gap: 14px; padding: 16px 20px; border: 1px solid var(--med-border); background: var(--med-card-subtle); cursor: pointer; user-select: none;">
+                <input type="checkbox" name="dinner" {% if target_meal_record.dinner %}checked{% endif %} style="width: 20px; height: 20px; cursor: pointer;">
+                <div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--med-text-main);">
+                        Dinner (Night)
+                    </div>
+                    <div style="font-size: 11.5px; color: var(--med-text-muted); margin-top: 2px;">
+                        Evening / night dinner service
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px;">
+                <input type="text" name="notes" value="{{ target_meal_record.notes|default:'' }}" placeholder="Optional remarks (e.g. Diet requirement, guest meal)" class="form-control" style="width: 100%; max-width: 100%;">
+            </div>
+            <div>
+                <button type="submit" class="btn-magento-primary" style="padding: 9px 24px; font-size: 13.5px;">
+                    Save Meals for {{ selected_log_date|date:"M d" }}
+                </button>
+            </div>
+            {% if target_meal_record %}
+                <div style="font-size: 12px; color: var(--med-text-muted);">
+                    Logged status: <strong>{{ target_meal_record.total_meals }} / 3 meals</strong>
+                    {% if target_meal_record.recorded_by %} by @{{ target_meal_record.recorded_by.username }}{% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Current Month Feed Status Metrics Cards -->
+<div style="margin-bottom: 24px;">
+    <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; color: var(--med-text-muted); margin-bottom: 10px;">
+        Current Month Feeding Status &bull; <strong>{{ current_month_name }}</strong>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+        <!-- Total Meals This Month -->
+        <div class="magento-card" style="padding: 16px 20px; margin-bottom: 0;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--med-text-muted); letter-spacing: 0.4px;">
+                Total Meals (This Month)
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 4px;">
+                {{ curr_total_meals }}
+            </div>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 3px;">
+                Across {{ curr_days_attended }} active days
+            </div>
+        </div>
+
+        <!-- Days Attended -->
+        <div class="magento-card" style="padding: 16px 20px; margin-bottom: 0;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--med-text-muted); letter-spacing: 0.4px;">
+                Days Attended (This Month)
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 4px;">
+                {{ curr_days_attended }} <span style="font-size: 14px; font-weight: 500; color: var(--med-text-muted);">Days</span>
+            </div>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 3px;">
+                Days with at least 1 meal
+            </div>
+        </div>
+
+        <!-- Breakfasts -->
+        <div class="magento-card" style="padding: 16px 20px; margin-bottom: 0;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--med-text-muted); letter-spacing: 0.4px;">
+                Breakfasts Taken
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 4px;">
+                {{ curr_b_count }}
+            </div>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 3px;">
+                Morning meals logged
+            </div>
+        </div>
+
+        <!-- Lunches -->
+        <div class="magento-card" style="padding: 16px 20px; margin-bottom: 0;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--med-text-muted); letter-spacing: 0.4px;">
+                Lunches Taken
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 4px;">
+                {{ curr_l_count }}
+            </div>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 3px;">
+                Afternoon meals logged
+            </div>
+        </div>
+
+        <!-- Dinners -->
+        <div class="magento-card" style="padding: 16px 20px; margin-bottom: 0;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--med-text-muted); letter-spacing: 0.4px;">
+                Dinners Taken
+            </div>
+            <div style="font-size: 26px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 4px;">
+                {{ curr_d_count }}
+            </div>
+            <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 3px;">
+                Night meals logged
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Old Records & Historical Feeding Ledger -->
+<div class="magento-card" id="studentHistoryFilterPanel" style="padding: 16px 20px; margin-bottom: 22px;">
+    <form method="get" action="{% url 'student_detail' student.pk %}" style="display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;">
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        <!-- Month Filter Dropdown -->
+        <div style="min-width: 190px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                Select Month:
+            </label>
+            <select name="month" class="scope-select" style="width: 100%; max-width: 100%;">
+                <option value="all" {% if selected_month == 'all' %}selected{% endif %}>All Records (All-Time)</option>
+                {% for m in available_months %}
+                    <option value="{{ m.val }}" {% if selected_month == m.val %}selected{% endif %}>
+                        {{ m.label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- From Date -->
+        <div style="min-width: 160px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                From Date:
+            </label>
+            <input type="date" name="from_date" value="{{ from_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- To Date -->
+        <div style="min-width: 160px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                To Date:
+            </label>
+            <input type="date" name="to_date" value="{{ to_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn-magento-primary" style="padding: 7px 16px;">
+                Filter Records
+            </button>
+            {% if from_date or to_date or selected_month != today|date:"Y-m" %}
+                <a href="{% url 'student_detail' student.pk %}" class="btn-magento-secondary" style="padding: 7px 14px;">
+                    Current Month
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Summary Badge for Filtered Period -->
+        <div style="margin-left: auto; text-align: right; background: var(--med-card-subtle); border: 1px solid var(--med-border); padding: 6px 18px;">
+            <div style="font-size: 11px; color: var(--med-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;">
+                Total Meals in Period
+            </div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 1px;">
+                {{ filtered_total_meals }} Meals <span style="font-size: 13px; font-weight: 500; color: var(--med-text-muted);">({{ filtered_days_attended }} Days)</span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Meal History Table -->
+<div class="magento-card">
+    <div class="magento-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 class="magento-card-title">
+            Meal Attendance History Ledger
+        </h2>
+        <div style="font-size: 12px; color: var(--med-text-muted);">
+            Breakdown: <strong>{{ filtered_b }}</strong> Breakfasts &bull; <strong>{{ filtered_l }}</strong> Lunches &bull; <strong>{{ filtered_d }}</strong> Dinners
+        </div>
+    </div>
+
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="student_history" page_param="history_page" has_filters=True filter_panel_id="studentHistoryFilterPanel" table_id="studentHistoryTable" export_filename="meal_history" search_placeholder="Search by keyword" search_tooltip="Search history by notes or recorded by" %}
+
+    <div class="grid-wrapper">
+        <table class="magento-table" id="studentHistoryTable">
+            <thead>
+                <tr>
+                    <th style="width: 130px;">Date</th>
+                    <th style="width: 120px;">Day</th>
+                    <th style="width: 150px; text-align: center;">Breakfast (Morning)</th>
+                    <th style="width: 150px; text-align: center;">Lunch (Afternoon)</th>
+                    <th style="width: 150px; text-align: center;">Dinner (Night)</th>
+                    <th style="width: 130px; text-align: center;">Daily Total</th>
+                    <th>Notes / Remarks</th>
+                    <th style="width: 140px;">Recorded By</th>
+                    <th style="text-align: right; width: 110px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in history_records %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap;">
+                        {{ r.date|date:"M d, Y" }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px;">
+                        {{ r.date|date:"l" }}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if r.breakfast %}
+                            <span class="status-active">Taken</span>
+                        {% else %}
+                            <span style="color: var(--med-text-muted);">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if r.lunch %}
+                            <span class="status-active">Taken</span>
+                        {% else %}
+                            <span style="color: var(--med-text-muted);">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if r.dinner %}
+                            <span class="status-active">Taken</span>
+                        {% else %}
+                            <span style="color: var(--med-text-muted);">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--med-text-main);">
+                        {{ r.total_meals }} / 3
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px;">
+                        {{ r.notes|default:"—" }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px;">
+                        {% if r.recorded_by %}@{{ r.recorded_by.username }}{% else %}—{% endif %}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'student_detail' student.pk %}?log_date={{ r.date|date:'Y-m-d' }}" class="btn-magento-secondary btn-xs">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="table-empty-cell">
+                        No meal records found for the selected period. Use the <strong>Daily Meal Logger</strong> above to record meals.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

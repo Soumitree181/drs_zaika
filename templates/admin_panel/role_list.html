@@ -1,0 +1,82 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}User Roles - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">User Roles</h1>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'role_create' %}" class="btn-magento-primary">
+            + Add New Role
+        </a>
+    </div>
+</div>
+
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="roles" table_id="rolesTable" export_filename="user_roles" search_placeholder="Search by keyword" search_tooltip="Search by role name, code, or description" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="rolesTable">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th style="width: 220px;">Role Name</th>
+                    <th style="width: 140px;">Role Code</th>
+                    <th>Description</th>
+                    <th style="width: 140px; text-align: center;">Admin Panel Access</th>
+                    <th style="width: 140px; text-align: center;">Manage Users</th>
+                    <th style="width: 110px; text-align: center;">Users Count</th>
+                    <th style="text-align: right; width: 140px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in roles %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12px; font-variant-numeric: tabular-nums;">
+                        {{ r.id }}
+                    </td>
+                    <td>
+                        <span class="table-primary-text">{{ r.name }}</span>
+                    </td>
+                    <td>
+                        <span class="table-sub-text" style="font-family: ui-monospace, monospace; font-size: 12px;">{{ r.code }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted);">
+                        {{ r.description|default:"—" }}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if r.can_access_admin %}
+                            <span class="status-active">Yes</span>
+                        {% else %}
+                            <span class="status-inactive">Blocked</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        {% if r.can_manage_users %}
+                            <span class="status-active">Yes</span>
+                        {% else %}
+                            <span class="status-no">No</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center; font-weight: 600; font-variant-numeric: tabular-nums;">
+                        {{ r.users.count }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'role_edit' r.pk %}" class="btn-magento-secondary btn-xs">Edit</a>
+                        <a href="{% url 'role_delete' r.pk %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="table-empty-cell">
+                        No user roles defined yet. Click <strong>+ Add New Role</strong> to create roles like Partner, Staff, Student, or Admin.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

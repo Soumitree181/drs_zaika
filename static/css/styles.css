@@ -1,0 +1,1771 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==========================================================================
+   Light Mode (Default Theme Tokens)
+   ========================================================================== */
+:root {
+  --font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Classy Medical Palette */
+  --med-midnight: #0c1e28;       /* Clinical Navy Sidebar */
+  --med-midnight-hover: #162c38;
+  --med-midnight-active: #08151c;
+  --med-sidebar-border: #1a3340;
+  --med-text-sidebar: #94a3b8;
+  
+  --med-teal-primary: #0d9488;   /* Surgical Teal */
+  --med-teal-hover: #0f766e;
+  --med-teal-light: #ccfbf1;
+  --med-teal-glow: rgba(13, 148, 136, 0.2);
+  
+  --med-cyan: #0284c7;           /* Clinical Cyan */
+  --med-cyan-hover: #0369a1;
+  --med-emerald: #059669;        /* Pharmacy Emerald */
+  
+  /* Surfaces & Backgrounds (Light) */
+  --med-page-bg: #f8fafc;
+  --med-surface-bg: #ffffff;
+  --med-surface-header: #fafcfd;
+  --med-border: #e2e8f0;
+  --med-border-subtle: #edf2f7;
+  
+  /* Typography (Light) */
+  --med-text-main: #0f172a;
+  --med-text-muted: #64748b;
+  --med-text-heading: #0f2937;
+  
+  /* Topbar (Light) */
+  --med-topbar-bg: #ffffff;
+  --med-topbar-border: #e2e8f0;
+  --med-user-pill-bg: #f8fafc;
+  
+  /* Tables (Light) */
+  --med-table-header-bg: #f8fafc;
+  --med-table-header-text: #475569;
+  --med-table-row-hover: #f0fdfa;
+  --med-table-row-alt: #fcfdfe;
+  --med-table-border: #f1f5f9;
+  
+  /* Inputs & Form Controls (Light) */
+  --med-input-bg: #ffffff;
+  --med-input-border: #cbd5e1;
+  --med-input-text: #0f172a;
+  --med-field-label: #1e293b;
+  
+  /* System Notice Bar (Light) */
+  --med-notice-bg: #f0fdfa;
+  --med-notice-border: #ccfbf1;
+  --med-notice-text: #0f766e;
+  
+  /* Stat Box Accents (Light) */
+  --stat-teal: #0d9488;
+  --stat-cyan: #0284c7;
+  --stat-emerald: #059669;
+  --stat-indigo: #6366f1;
+
+  /* Inline Code Tokens (Light) */
+  --med-code-bg: #f1f5f9;
+  --med-code-text: #0f766e;
+  --med-code-border: #e2e8f0;
+
+  /* Secondary Button (Light) */
+  --med-btn-sec-bg: #ffffff;
+  --med-btn-sec-border: #e2e8f0;
+  --med-btn-sec-text: #334155;
+  --med-btn-sec-hover-bg: #f1f5f9;
+  
+  /* Shadows (Light) */
+  --med-card-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
+  --med-hover-shadow: 0 6px 14px rgba(15, 23, 42, 0.07);
+
+  --sidebar-width: 108px;
+  --topbar-height: 56px;
+}
+
+/* ==========================================================================
+   Dark Mode Theme Tokens ([data-theme="dark"])
+   ========================================================================== */
+[data-theme="dark"] {
+  /* Surfaces & Backgrounds (Dark) */
+  --med-page-bg: #07131a;         /* Deep nocturnal clinical slate */
+  --med-surface-bg: #0d1e28;      /* Deep midnight card surface */
+  --med-surface-header: #0f2430;  /* Card header */
+  --med-border: #163242;          /* Clean dark border */
+  --med-border-subtle: #112633;
+  
+  /* Typography (Dark) */
+  --med-text-main: #f1f5f9;       /* Slate 100 */
+  --med-text-muted: #94a3b8;      /* Slate 400 */
+  --med-text-heading: #f8fafc;    /* Slate 50 */
+  
+  /* Topbar (Dark) */
+  --med-topbar-bg: #0a1821;
+  --med-topbar-border: #163242;
+  --med-user-pill-bg: #0f2430;
+  
+  /* Tables (Dark) */
+  --med-table-header-bg: #0f2430;
+  --med-table-header-text: #94a3b8;
+  --med-table-row-hover: #122e3e;
+  --med-table-row-alt: #0a1822;
+  --med-table-border: #163242;
+  
+  /* Inputs & Form Controls (Dark) */
+  --med-input-bg: #09171f;
+  --med-input-border: #1e4157;
+  --med-input-text: #f8fafc;
+  --med-field-label: #e2e8f0;
+  
+  /* System Notice Bar (Dark) */
+  --med-notice-bg: #082227;
+  --med-notice-border: #0e3d45;
+  --med-notice-text: #2dd4bf;
+  
+  /* Stat Box Accents (Dark - Vibrant High Contrast) */
+  --stat-teal: #2dd4bf;
+  --stat-cyan: #38bdf8;
+  --stat-emerald: #34d399;
+  --stat-indigo: #a5b4fc;
+
+  /* Inline Code Tokens (Dark) */
+  --med-code-bg: #0f2430;
+  --med-code-text: #5eead4;
+  --med-code-border: #1e4157;
+
+  /* Secondary Button (Dark) */
+  --med-btn-sec-bg: #0f2430;
+  --med-btn-sec-border: #1a384a;
+  --med-btn-sec-text: #e2e8f0;
+  --med-btn-sec-hover-bg: #16364a;
+  
+  /* Shadows (Dark) */
+  --med-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --med-hover-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--med-page-bg);
+  color: var(--med-text-main);
+  line-height: 1.5;
+  font-size: 13.5px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* --------------------------------------------------------------------------
+   App Wrapper & Layout
+-------------------------------------------------------------------------- */
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Classy Medical Left Sidebar
+-------------------------------------------------------------------------- */
+.admin-sidebar {
+  width: var(--sidebar-width);
+  background: var(--med-midnight);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--med-sidebar-border);
+  box-shadow: 2px 0 10px rgba(12, 30, 40, 0.2);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Brand Logo Box */
+.sidebar-brand {
+  height: var(--topbar-height);
+  background: #09171f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border-bottom: 1px solid var(--med-sidebar-border);
+  padding: 6px;
+}
+
+.sidebar-brand-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 50%;
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
+}
+
+.sidebar-brand:hover .sidebar-brand-img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.5));
+}
+
+.brand-icon-box {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #0d9488, #0284c7);
+  color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.35);
+  letter-spacing: -0.5px;
+}
+
+/* Vertical Menu Navigation */
+.sidebar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  width: 100%;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 6px 12px;
+  color: var(--med-text-sidebar);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  background: var(--med-midnight-hover);
+  color: #f1f5f9;
+}
+
+.nav-link.active {
+  background: var(--med-midnight-active);
+  color: #ffffff;
+  border-left: 3px solid var(--med-teal-primary);
+}
+
+.nav-link.active .nav-icon svg {
+  fill: var(--med-teal-primary);
+  filter: drop-shadow(0 0 6px rgba(13, 148, 136, 0.4));
+}
+
+.nav-icon {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.nav-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: all 0.2s ease;
+}
+
+.nav-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1.25;
+}
+
+/* --------------------------------------------------------------------------
+   Main Right Area
+-------------------------------------------------------------------------- */
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--med-page-bg);
+  transition: background-color 0.25s ease;
+}
+
+/* Top Calming Medical Mint Notice Bar */
+.magento-notice-bar {
+  background: var(--med-notice-bg);
+  color: var(--med-notice-text);
+  padding: 8px 24px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--med-notice-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+}
+
+.notice-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice-badge {
+  color: var(--med-teal-primary);
+  font-size: 14px;
+}
+
+/* Header Topbar */
+.admin-topbar {
+  height: var(--topbar-height);
+  background: var(--med-topbar-bg);
+  border-bottom: 1px solid var(--med-topbar-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--med-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--med-text-main);
+}
+
+.topbar-brand-notice {
+  font-size: 13px;
+  color: var(--med-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.topbar-brand-notice strong {
+  color: var(--med-text-heading);
+  font-weight: 600;
+}
+
+.notice-badge {
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.system-status-indicator {
+  color: var(--med-notice-text);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Theme Switcher Button
+-------------------------------------------------------------------------- */
+.theme-toggle-btn {
+  background: var(--med-user-pill-bg);
+  border: 1px solid var(--med-border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--med-text-main);
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--med-btn-sec-hover-bg);
+  border-color: var(--med-teal-primary);
+  transform: translateY(-1px);
+}
+
+.theme-icon {
+  font-size: 14px;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Header Action Icon */
+.header-action-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--med-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.header-action-icon:hover {
+  background: var(--med-user-pill-bg);
+  color: var(--med-teal-primary);
+}
+
+.header-action-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.notification-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--med-teal-primary);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--med-text-main);
+  background: var(--med-user-pill-bg);
+  padding: 4px 10px 4px 6px;
+  border-radius: 20px;
+  border: 1px solid var(--med-border);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.user-avatar-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d9488, #0284c7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.btn-signout {
+  color: #ef4444;
+  text-decoration: none;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding-left: 8px;
+  border-left: 1px solid var(--med-border);
+  transition: color 0.15s;
+}
+.btn-signout:hover {
+  color: #dc2626;
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Content Area & Page Header
+-------------------------------------------------------------------------- */
+.admin-content {
+  padding: 24px 28px;
+  flex: 1;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.content-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--med-text-heading);
+  letter-spacing: -0.4px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   Classy Medical Action Buttons
+-------------------------------------------------------------------------- */
+.btn-magento-primary {
+  background: var(--med-teal-primary);
+  color: #ffffff;
+  border: 1px solid var(--med-teal-primary);
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(13, 148, 136, 0.2);
+  transition: all 0.18s ease;
+}
+
+.btn-magento-primary:hover {
+  background: var(--med-teal-hover);
+  border-color: var(--med-teal-hover);
+  box-shadow: 0 4px 8px rgba(13, 148, 136, 0.35);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.btn-magento-secondary {
+  background: var(--med-btn-sec-bg);
+  color: var(--med-btn-sec-text);
+  border: 1px solid var(--med-btn-sec-border);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.18s ease;
+}
+
+.btn-magento-secondary:hover {
+  background: var(--med-btn-sec-hover-bg);
+  border-color: var(--med-teal-primary);
+  color: var(--med-text-main);
+}
+
+.btn-magento-danger {
+  background: #ef4444;
+  color: #ffffff;
+  border: 1px solid #ef4444;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.btn-magento-danger:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.btn-xs {
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 0;
+}
+
+/* Classy Table Row Buttons (Refined & Minimalist - Sharp Edges) */
+.btn-magento-secondary.btn-xs {
+  background: var(--med-card-subtle);
+  color: var(--med-text-main);
+  border: 1px solid var(--med-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.btn-magento-secondary.btn-xs:hover {
+  background: var(--med-surface-bg);
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.btn-magento-danger.btn-xs {
+  background: transparent;
+  color: var(--med-text-muted);
+  border: 1px solid var(--med-border);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.btn-magento-danger.btn-xs:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 0;
+  background: var(--med-card-subtle);
+  color: var(--med-text-main);
+  border: 1px solid var(--med-border);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-row-action:hover {
+  background: var(--med-surface-bg);
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.btn-row-action.btn-row-danger {
+  color: var(--med-text-muted);
+}
+
+.btn-row-action.btn-row-danger:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* --------------------------------------------------------------------------
+   Cards & Data Tables (Adaptive Light/Dark Theme - Zero Border Radius)
+-------------------------------------------------------------------------- */
+.magento-card {
+  background: var(--med-surface-bg);
+  border: 1px solid var(--med-border);
+  border-radius: 0;
+  box-shadow: var(--med-card-shadow);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.magento-card-header {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--med-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--med-surface-header);
+}
+
+.magento-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--med-text-heading);
+}
+
+.grid-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table.magento-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  text-align: left;
+}
+
+table.magento-table th {
+  background: var(--med-table-header-bg);
+  color: var(--med-text-muted);
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--med-border);
+  border-right: none;
+  white-space: nowrap;
+}
+
+table.magento-table th:last-child {
+  border-right: none;
+}
+
+table.magento-table td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--med-table-border);
+  border-right: none;
+  vertical-align: middle;
+  color: var(--med-text-main);
+  transition: background-color 0.15s ease;
+}
+
+table.magento-table td:last-child {
+  border-right: none;
+}
+
+table.magento-table tbody tr:hover td {
+  background-color: var(--med-table-row-hover);
+}
+
+table.magento-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   Forms (Fieldsets)
+-------------------------------------------------------------------------- */
+.magento-fieldset {
+  padding: 24px;
+}
+
+.magento-form-row {
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.magento-form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--med-field-label);
+  padding-top: 8px;
+}
+
+.magento-form-label.required::after {
+  content: " *";
+  color: #ef4444;
+}
+
+.magento-form-row label:not(.magento-form-label) {
+  color: var(--med-text-main);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.magento-form-control,
+.form-control,
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  width: 100%;
+  max-width: 500px;
+  padding: 8px 12px;
+  font-size: 13.5px;
+  border: 1px solid var(--med-input-border);
+  border-radius: 6px;
+  background: var(--med-input-bg);
+  color: var(--med-input-text);
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.magento-form-control:focus,
+.form-control:focus,
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--med-teal-primary);
+  box-shadow: 0 0 0 3px var(--med-teal-glow);
+}
+
+.magento-field-note {
+  font-size: 11.5px;
+  color: var(--med-text-muted);
+  margin-top: 5px;
+  display: block;
+}
+
+.magento-field-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   Classy Neutral Badges & Micro-tags (No multi-color in table columns)
+-------------------------------------------------------------------------- */
+.role-badge,
+.type-tag,
+.classy-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 0;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  background: var(--med-card-subtle);
+  color: var(--med-text-main);
+  border: 1px solid var(--med-border);
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* Neutral role code tag */
+.role-code-tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--med-text-muted);
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: inline;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: var(--med-text-muted);
+  background: transparent;
+}
+
+/* Neutral status indicators with clean minimal dot */
+.status-active,
+.status-inactive,
+.status-no {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--med-text-main);
+}
+
+.status-active::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.status-inactive::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--med-text-muted);
+}
+
+.status-no::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--med-border);
+}
+
+.user-cell-name {
+  font-weight: 600;
+  color: var(--med-text-main) !important;
+}
+
+/* Classy roll number: bold, tabular, neutral */
+.student-roll {
+  font-weight: 600;
+  color: var(--med-text-main);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Classy table typography helpers */
+.table-primary-text {
+  font-weight: 600;
+  color: var(--med-text-main);
+}
+
+.table-link-main {
+  text-decoration: none;
+  color: var(--med-text-main);
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.table-link-main:hover {
+  color: var(--med-teal-primary);
+}
+
+.table-sub-text {
+  font-size: 11.5px;
+  color: var(--med-text-muted);
+  font-weight: 400;
+}
+
+.cell-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--med-text-main);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.text-unassigned {
+  color: var(--med-text-muted);
+  font-style: italic;
+  font-size: 12px;
+}
+
+.text-muted-cell {
+  color: var(--med-text-muted);
+}
+
+.table-empty-cell {
+  text-align: center;
+  padding: 40px;
+  color: var(--med-text-muted);
+  font-size: 13.5px;
+}
+
+select option {
+  background-color: var(--med-surface-bg);
+  color: var(--med-text-main);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--med-teal-primary);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   Alert Messages
+-------------------------------------------------------------------------- */
+.alert-messages {
+  margin-bottom: 20px;
+}
+
+.magento-alert {
+  padding: 12px 18px;
+  font-size: 13px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.magento-alert-success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+.magento-alert-error, .magento-alert-danger { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.magento-alert-info { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+
+[data-theme="dark"] .magento-alert-success { background: #052e16; color: #86efac; border-color: #14532d; }
+[data-theme="dark"] .magento-alert-error, [data-theme="dark"] .magento-alert-danger { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+[data-theme="dark"] .magento-alert-info { background: #082f49; color: #7dd3fc; border-color: #0369a1; }
+
+/* --------------------------------------------------------------------------
+   Dashboard Scope Bar & Stat Boxes
+-------------------------------------------------------------------------- */
+.dashboard-scope-bar {
+  background: var(--med-surface-bg);
+  border: 1px solid var(--med-border);
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 6px;
+  color: var(--med-text-main);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.scope-label {
+  font-weight: 600;
+  color: var(--med-text-muted);
+}
+
+.scope-select {
+  padding: 5px 10px;
+  border: 1px solid var(--med-input-border);
+  border-radius: 0;
+  font-size: 12.5px;
+  font-family: inherit;
+  background: var(--med-input-bg);
+  color: var(--med-input-text);
+  max-width: 260px;
+  cursor: pointer;
+}
+
+.scope-info-icon {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Stat Box Variant Themes */
+.stat-box-teal { border-top-color: var(--stat-teal) !important; }
+.stat-box-teal .stat-box-value { color: var(--stat-teal) !important; }
+
+.stat-box-cyan { border-top-color: var(--stat-cyan) !important; }
+.stat-box-cyan .stat-box-value { color: var(--stat-cyan) !important; }
+
+.stat-box-emerald { border-top-color: var(--stat-emerald) !important; }
+.stat-box-emerald .stat-box-value { color: var(--stat-emerald) !important; }
+
+.stat-box-indigo { border-top-color: var(--stat-indigo) !important; }
+.stat-box-indigo .stat-box-value { color: var(--stat-indigo) !important; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.dashboard-stat-box {
+  background: var(--med-surface-bg);
+  border: 1px solid var(--med-border);
+  border-radius: 8px;
+  padding: 22px;
+  border-top: 4px solid var(--med-teal-primary);
+  box-shadow: var(--med-card-shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.25s, border-color 0.25s;
+}
+
+.dashboard-stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--med-hover-shadow);
+}
+
+.stat-box-title {
+  font-size: 11.5px;
+  color: var(--med-text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.stat-box-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--med-text-heading);
+  margin: 6px 0;
+  letter-spacing: -0.5px;
+}
+
+.stat-box-desc {
+  font-size: 12px;
+  color: var(--med-text-muted);
+}
+
+.dashboard-blank-card {
+  background: var(--med-surface-bg);
+  border: 1px solid var(--med-border);
+  border-radius: 8px;
+  padding: 60px 24px;
+  text-align: center;
+  box-shadow: var(--med-card-shadow);
+  transition: background-color 0.25s, border-color 0.25s;
+}
+
+.dashboard-blank-card h3 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--med-text-heading);
+  margin-bottom: 8px;
+}
+
+.dashboard-blank-card p {
+  font-size: 13.5px;
+  color: var(--med-text-muted);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Responsiveness
+-------------------------------------------------------------------------- */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(12, 30, 40, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block;
+  }
+
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .admin-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .magento-notice-bar {
+    display: none;
+  }
+
+  .admin-content {
+    padding: 16px;
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .btn-magento-primary, .btn-magento-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .magento-form-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .magento-form-control,
+  .form-control,
+  select,
+  input,
+  textarea {
+    max-width: 100%;
+  }
+
+  .user-profile-menu .username-text {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Login & Access Denied Pages (Adaptive Theme)
+-------------------------------------------------------------------------- */
+.login-body,
+.access-denied-body {
+  background: linear-gradient(145deg, #09171f 0%, #0c1e28 50%, #08212e 100%);
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+[data-theme="light"] .login-body,
+[data-theme="light"] .access-denied-body {
+  background: linear-gradient(145deg, #f0fdfa 0%, #e0f2fe 50%, #f8fafc 100%);
+}
+
+.login-logo-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.login-logo-img {
+  width: 108px;
+  height: 108px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.45));
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.login-logo-img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 8px 24px rgba(212, 175, 55, 0.5));
+}
+
+.login-brand-title {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+[data-theme="light"] .login-brand-title {
+  color: #0f172a;
+}
+
+.login-brand-subtitle {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 4px;
+}
+[data-theme="light"] .login-brand-subtitle {
+  color: #64748b;
+}
+
+.login-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+[data-theme="light"] .login-toggle-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   Zero Border Radius - Architectural Sharp Styling for All Listings
+-------------------------------------------------------------------------- */
+.magento-card,
+.magento-card-header,
+.grid-wrapper,
+table.magento-table,
+table.magento-table th,
+table.magento-table td,
+.role-badge,
+.type-tag,
+.classy-tag,
+.btn-xs,
+.btn-row-action,
+.scope-select,
+.btn-magento-primary,
+.btn-magento-secondary,
+.btn-magento-danger,
+.btn-page-nav,
+.btn-page-num,
+input[type="date"].scope-select,
+select.scope-select {
+  border-radius: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Classy Zero-Radius Pagination Controls
+-------------------------------------------------------------------------- */
+.magento-pagination-bar {
+  border-top: 1px solid var(--med-table-border);
+  background: var(--med-surface-bg);
+}
+
+.btn-page-nav,
+.btn-page-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 28px;
+  padding: 0 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  border-radius: 0 !important;
+  background: var(--med-card-subtle);
+  color: var(--med-text-main);
+  border: 1px solid var(--med-border);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-page-nav:hover,
+.btn-page-num:hover {
+  background: var(--med-surface-bg);
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.btn-page-num.active {
+  background: var(--med-teal-primary);
+  color: #ffffff;
+  border-color: var(--med-teal-primary);
+  font-weight: 700;
+}
+
+.btn-page-nav.disabled,
+.btn-page-num.ellipsis {
+  opacity: 0.45;
+  cursor: default;
+  background: transparent;
+  border-color: var(--med-border);
+  color: var(--med-text-muted);
+}
+
+/* ==========================================================================
+   Magento 2 Authentic Data Grid Toolbar & Search Controls
+   ========================================================================== */
+.admin-data-grid-toolbar {
+  background: var(--med-card-bg);
+  border: 1px solid var(--med-border);
+  border-bottom: 1px solid var(--med-border);
+  border-radius: 0 !important;
+  padding: 12px 18px;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+.data-grid-toolbar-row-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.data-grid-search-control {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+}
+
+.data-grid-search-input {
+  width: 100%;
+  height: 32px;
+  padding: 0 34px 0 10px;
+  font-size: 12.5px;
+  font-style: italic;
+  background-color: #ffffff;
+  color: #222222;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+[data-theme="dark"] .data-grid-search-input {
+  background-color: #16202a;
+  color: #f1f5f9;
+  border-color: #33485d;
+}
+
+.data-grid-search-input::placeholder {
+  color: #777777;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+[data-theme="dark"] .data-grid-search-input::placeholder {
+  color: #94a3b8;
+}
+
+.data-grid-search-input:focus {
+  border-color: var(--med-teal-primary);
+  font-style: normal;
+}
+
+.data-grid-search-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 0 !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555555;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+[data-theme="dark"] .data-grid-search-btn {
+  color: #94a3b8;
+}
+
+.data-grid-search-btn:hover {
+  color: var(--med-teal-primary);
+}
+
+.data-grid-search-clear {
+  position: absolute;
+  right: 33px;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--med-text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.data-grid-search-clear:hover {
+  color: #ef4444;
+}
+
+.data-grid-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-grid-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  background: #e3e3e3;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  color: #303030;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+[data-theme="dark"] .btn-grid-filter {
+  background: #202d3a;
+  border-color: #33485d;
+  color: #e2e8f0;
+}
+
+.btn-grid-filter:hover,
+.btn-grid-filter.active {
+  background: #d5d5d5;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+[data-theme="dark"] .btn-grid-filter:hover,
+[data-theme="dark"] .btn-grid-filter.active {
+  background: #283747;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.grid-filter-active-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--med-teal-primary);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 0 !important;
+}
+
+.grid-dropdown-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-grid-dropdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--med-text-heading);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0 6px;
+  transition: color 0.15s ease;
+}
+
+.btn-grid-dropdown:hover {
+  color: var(--med-teal-primary);
+}
+
+.grid-vertical-divider {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: var(--med-border);
+  margin: 0 2px;
+}
+
+.grid-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 150px;
+  background: var(--med-card-bg);
+  border: 1px solid var(--med-border);
+  border-radius: 0 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  margin-top: 4px;
+}
+
+.grid-dropdown-menu.show {
+  display: block;
+}
+
+.grid-dropdown-item {
+  display: block;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--med-text-main);
+  text-decoration: none;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.grid-dropdown-item:hover,
+.grid-dropdown-item.active {
+  background: var(--med-card-subtle);
+  color: var(--med-teal-primary);
+}
+
+.data-grid-toolbar-row-2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.data-grid-row-2-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.grid-control-select {
+  height: 30px;
+  padding: 0 22px 0 8px;
+  font-size: 12px;
+  background-color: #ffffff;
+  color: #303030;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%2364748b' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+}
+
+[data-theme="dark"] .grid-control-select {
+  background-color: #16202a;
+  border-color: #33485d;
+  color: #f1f5f9;
+}
+
+.grid-control-select:focus {
+  border-color: var(--med-teal-primary);
+}
+
+.grid-records-count {
+  font-size: 12px;
+  color: var(--med-text-muted);
+  white-space: nowrap;
+}
+
+.data-grid-row-2-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.grid-per-page-select {
+  min-width: 58px;
+  width: auto;
+  max-width: 110px;
+  height: 30px;
+}
+
+.grid-per-page-label {
+  font-size: 12px;
+  color: var(--med-text-muted);
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.btn-custom-size {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 9px;
+  background: #e3e3e3;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  color: #303030;
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  margin-right: 6px;
+  user-select: none;
+}
+
+[data-theme="dark"] .btn-custom-size {
+  background: #202d3a;
+  border-color: #33485d;
+  color: #e2e8f0;
+}
+
+.btn-custom-size:hover {
+  background: #d5d5d5;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+[data-theme="dark"] .btn-custom-size:hover {
+  background: #283747;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.grid-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: #e3e3e3;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  color: #303030;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: all 0.15s ease;
+  padding: 0;
+  user-select: none;
+}
+
+[data-theme="dark"] .grid-page-btn {
+  background: #202d3a;
+  border-color: #33485d;
+  color: #e2e8f0;
+}
+
+.grid-page-btn:hover:not(.disabled) {
+  background: #d5d5d5;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+[data-theme="dark"] .grid-page-btn:hover:not(.disabled) {
+  background: #283747;
+  border-color: var(--med-teal-primary);
+  color: var(--med-teal-primary);
+}
+
+.grid-page-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.grid-page-input {
+  width: 38px;
+  height: 30px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #ffffff;
+  color: #222222;
+  border: 1px solid #adadad;
+  border-radius: 0 !important;
+  outline: none;
+  box-sizing: border-box;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="dark"] .grid-page-input {
+  background-color: #16202a;
+  border-color: #33485d;
+  color: #f1f5f9;
+}
+
+.grid-page-input:focus {
+  border-color: var(--med-teal-primary);
+}
+
+.grid-page-total {
+  font-size: 12px;
+  color: var(--med-text-muted);
+  margin: 0 4px;
+  white-space: nowrap;
+}
+
+
+

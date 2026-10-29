@@ -1,0 +1,164 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}All Spends - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">All Spends</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Comprehensive ledger of all canteen expenditures, groceries, utility payments, and partner investments.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'partner_list' %}" class="btn-magento-secondary">
+            Partners List
+        </a>
+        <a href="{% url 'investment_create' %}?next={% url 'all_spends' %}" class="btn-magento-primary">
+            + Add Spend
+        </a>
+    </div>
+</div>
+
+<!-- Filters Card (Partner Filter & Date Filter) -->
+<div class="magento-card" id="allSpendsFiltersPanel" style="padding: 16px 20px; margin-bottom: 22px;">
+    <form method="get" action="{% url 'all_spends' %}" style="display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;">
+        <!-- Partner Filter -->
+        <div style="min-width: 200px; flex: 1;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                Filter by Partner:
+            </label>
+            <select name="partner_id" class="scope-select" style="width: 100%; max-width: 100%;">
+                <option value="">All Partners</option>
+                {% for p in partners %}
+                    <option value="{{ p.id }}" {% if selected_partner_id == p.id %}selected{% endif %}>
+                        {{ p.get_full_name|default:p.username }} (@{{ p.username }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- From Date Filter -->
+        <div style="min-width: 160px; flex: 1;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                From Date:
+            </label>
+            <input type="date" name="from_date" value="{{ from_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- To Date Filter -->
+        <div style="min-width: 160px; flex: 1;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                To Date:
+            </label>
+            <input type="date" name="to_date" value="{{ to_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- Category Filter -->
+        <div style="min-width: 190px; flex: 1;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                Category:
+            </label>
+            <select name="category" class="scope-select" style="width: 100%; max-width: 100%;">
+                <option value="">All Categories</option>
+                {% for code, label in categories %}
+                    <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Filter Action Buttons -->
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn-magento-primary" style="padding: 7px 16px;">
+                Filter Spends
+            </button>
+            {% if selected_partner_id or from_date or to_date or selected_category %}
+                <a href="{% url 'all_spends' %}" class="btn-magento-secondary" style="padding: 7px 14px;">
+                    Clear
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Filtered Total Amount Display -->
+        <div style="margin-left: auto; text-align: right; background: var(--med-card-subtle); border: 1px solid var(--med-border); border-radius: 0; padding: 6px 18px;">
+            <div style="font-size: 11px; color: var(--med-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;">
+                {% if selected_partner_id or from_date or to_date or selected_category %}Filtered Spends{% else %}Total Spends{% endif %} ({{ total_count }} Entries)
+            </div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 1px;">
+                ₹{{ total_filtered_amount|floatformat:2 }}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Spends Table -->
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="all_spends" has_filters=True filter_panel_id="allSpendsFiltersPanel" table_id="allSpendsTable" export_filename="all_spends" search_placeholder="Search by keyword" search_tooltip="Search by purpose, reference, category, or partner" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="allSpendsTable">
+            <thead>
+                <tr>
+                    <th style="width: 105px;">Date</th>
+                    <th style="width: 190px;">Partner</th>
+                    <th>Purpose / Description</th>
+                    <th style="width: 180px;">Category</th>
+                    <th style="width: 130px;">Payment Mode</th>
+                    <th style="width: 130px;">Bill / Ref No.</th>
+                    <th style="text-align: right; width: 140px;">Amount (₹)</th>
+                    <th style="text-align: right; width: 130px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in spends %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap;">
+                        {{ s.payment_date|date:"M d, Y" }}
+                    </td>
+                    <td>
+                        <a href="{% url 'partner_detail' s.partner.pk %}" class="table-link-main">
+                            {{ s.partner.get_full_name|default:s.partner.username }}
+                        </a>
+                        <div class="table-sub-text">@{{ s.partner.username }}</div>
+                    </td>
+                    <td>
+                        <div class="table-primary-text">{{ s.purpose }}</div>
+                        {% if s.notes %}
+                            <div class="table-sub-text" style="margin-top: 3px;">{{ s.notes }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="classy-tag">{{ s.get_category_display }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px;">
+                        {{ s.get_payment_mode_display }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px; font-variant-numeric: tabular-nums;">
+                        {{ s.reference_number|default:"—" }}
+                    </td>
+                    <td class="cell-amount">
+                        ₹{{ s.amount|floatformat:2 }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'investment_edit' s.pk %}?next={% url 'all_spends' %}" class="btn-magento-secondary btn-xs">
+                            Edit
+                        </a>
+                        <a href="{% url 'investment_delete' s.pk %}?next={% url 'all_spends' %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="table-empty-cell">
+                        No spend records found matching the filter criteria. Click <strong>+ Add Spend</strong> to log a payment.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

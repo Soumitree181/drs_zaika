@@ -1,0 +1,76 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Dashboard - MediDine Admin{% endblock %}
+
+{% block content %}
+<!-- Content Header (matching screenshot) -->
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Dashboard</h1>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'admin_dashboard' %}" class="btn-magento-primary">
+            Reload Data
+        </a>
+    </div>
+</div>
+
+<!-- Scope Filter Bar (matching screenshot) -->
+<div class="dashboard-scope-bar">
+    <span class="scope-label">Scope:</span>
+    <select class="scope-select">
+        <option>All Canteen Views</option>
+        <option>Main Hall Counter</option>
+        <option>Snack & Coffee Bar</option>
+    </select>
+    <span class="scope-info-icon" title="Scope Filter">ℹ️</span>
+</div>
+
+<!-- Metric Overview Boxes (matching screenshot style) -->
+<div class="dashboard-grid">
+    <div class="dashboard-stat-box stat-box-teal">
+        <div class="stat-box-title">Total Registered Users</div>
+        <div class="stat-box-value">{{ total_users }}</div>
+        <div class="stat-box-desc">Partners, Staff & Students</div>
+    </div>
+
+    <div class="dashboard-stat-box stat-box-cyan">
+        <div class="stat-box-title">User Roles Configured</div>
+        <div class="stat-box-value">{{ total_roles }}</div>
+        <div class="stat-box-desc">Partner, Staff, Student, etc.</div>
+    </div>
+
+    <div class="dashboard-stat-box stat-box-emerald">
+        <div class="stat-box-title">Student Types Defined</div>
+        <div class="stat-box-value">{{ total_student_types }}</div>
+        <div class="stat-box-desc">Monthly, Pay-per-meal, etc.</div>
+    </div>
+
+    <div class="dashboard-stat-box stat-box-indigo">
+        <div class="stat-box-title">Assigned Students</div>
+        <div class="stat-box-value">{{ total_students }}</div>
+        <div class="stat-box-desc">Active Medical Student Records</div>
+    </div>
+</div>
+
+<!-- Blank Dashboard Area as Requested -->
+<div class="dashboard-blank-card">
+    <div style="font-size: 36px; margin-bottom: 12px;">📊</div>
+    <h3>Dashboard (Blank for now)</h3>
+    <p>
+        The dashboard analytics, sales reports, and charts are currently disabled for Phase 1.
+        Please use the left navigation menu to manage <strong>Users</strong>, <strong>User Roles</strong>, <strong>Student Types</strong>, and <strong>Students</strong>.
+    </p>
+    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        {% if user.can_manage_users or user.is_partner %}
+            <a href="{% url 'partner_list' %}" class="btn-magento-primary">Partners</a>
+        {% endif %}
+        {% if user.can_manage_users %}
+            <a href="{% url 'user_list' %}" class="btn-magento-secondary">Manage Users</a>
+            <a href="{% url 'role_list' %}" class="btn-magento-secondary">Manage User Roles</a>
+        {% endif %}
+        <a href="{% url 'student_type_list' %}" class="btn-magento-secondary">Manage Student Types</a>
+        <a href="{% url 'student_list' %}" class="btn-magento-secondary">Manage Students</a>
+    </div>
+</div>
+{% endblock %}

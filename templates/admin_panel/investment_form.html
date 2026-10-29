@@ -1,0 +1,142 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ title }} - MediDine Admin{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% if next_url %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+    {% endif %}
+
+    <div class="content-header">
+        <div>
+            <h1 class="content-title">{{ title }}</h1>
+            <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+                Record payment made by a partner for canteen groceries, equipment, wages, or operational supplies.
+            </p>
+        </div>
+        <div class="header-actions">
+            {% if next_url %}
+                <a href="{{ next_url }}" class="btn-magento-secondary">← Back</a>
+            {% else %}
+                <a href="{% url 'partner_list' %}" class="btn-magento-secondary">← Back to Partners</a>
+            {% endif %}
+            <button type="submit" class="btn-magento-primary">Save Spend</button>
+        </div>
+    </div>
+
+    {% if form.non_field_errors %}
+        <div class="magento-alert magento-alert-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <div class="magento-card">
+        <div class="magento-card-header">
+            <h2 class="magento-card-title">Investment & Payment Information</h2>
+        </div>
+
+        <div class="magento-fieldset">
+            <!-- Partner Selector -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Investing Partner</label>
+                <div>
+                    {{ form.partner }}
+                    <span class="magento-field-note">Select which partner paid for this expenditure or injected capital</span>
+                    {% if form.partner.errors %}
+                        <span class="magento-field-error">{{ form.partner.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Amount (₹) -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Amount (₹ INR)</label>
+                <div>
+                    <div style="position: relative; max-width: 500px;">
+                        <span style="position: absolute; left: 12px; top: 9px; font-weight: 700; color: var(--stat-emerald); font-size: 14px;">₹</span>
+                        {{ form.amount }}
+                    </div>
+                    <span class="magento-field-note">Enter amount paid in Rupees (e.g. 15000.00)</span>
+                    {% if form.amount.errors %}
+                        <span class="magento-field-error">{{ form.amount.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Purpose / What was paid for -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Purpose / Paid For</label>
+                <div>
+                    {{ form.purpose }}
+                    <span class="magento-field-note">Brief title of expense, e.g. "Monthly Rice & Oil Restock", "Commercial Induction Counter", "Vegetables & Milk"</span>
+                    {% if form.purpose.errors %}
+                        <span class="magento-field-error">{{ form.purpose.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Category -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Expense Category</label>
+                <div>
+                    {{ form.category }}
+                    <span class="magento-field-note">Select department classification for reporting</span>
+                    {% if form.category.errors %}
+                        <span class="magento-field-error">{{ form.category.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Date of Payment</label>
+                <div>
+                    {{ form.payment_date }}
+                    <span class="magento-field-note">Date when the money was spent or transferred</span>
+                    {% if form.payment_date.errors %}
+                        <span class="magento-field-error">{{ form.payment_date.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Payment Mode -->
+            <div class="magento-form-row">
+                <label class="magento-form-label required">Payment Mode</label>
+                <div>
+                    {{ form.payment_mode }}
+                    <span class="magento-field-note">How was the payment made (UPI, Cash, Bank Transfer, Card, etc.)</span>
+                    {% if form.payment_mode.errors %}
+                        <span class="magento-field-error">{{ form.payment_mode.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Reference / Invoice Number -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Bill / UTR Reference</label>
+                <div>
+                    {{ form.reference_number }}
+                    <span class="magento-field-note">Vendor invoice number, bill number, or UPI transaction ID (optional)</span>
+                    {% if form.reference_number.errors %}
+                        <span class="magento-field-error">{{ form.reference_number.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="magento-form-row">
+                <label class="magento-form-label">Notes & Vendor Details</label>
+                <div>
+                    {{ form.notes }}
+                    <span class="magento-field-note">Optional shop address, vendor contact, or breakdown of purchased items</span>
+                    {% if form.notes.errors %}
+                        <span class="magento-field-error">{{ form.notes.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Investment Ledger - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Partner Investment Ledger</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Complete itemized ledger of partner payments, equipment purchases, raw groceries, and canteen expenses.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'partner_list' %}" class="btn-magento-secondary">
+            ← Partners Overview
+        </a>
+        <a href="{% url 'investment_create' %}" class="btn-magento-primary">
+            + Record New Investment
+        </a>
+    </div>
+</div>
+
+<!-- Ledger Filter Bar -->
+<div class="magento-card" style="padding: 16px 20px; margin-bottom: 20px;">
+    <form method="get" action="{% url 'investment_list' %}" style="display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;">
+        <!-- Partner Filter -->
+        <div style="min-width: 200px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                Filter by Partner:
+            </label>
+            <select name="partner_id" class="scope-select" style="width: 100%; max-width: 100%;">
+                <option value="">All Partners</option>
+                {% for p in partners %}
+                    <option value="{{ p.id }}" {% if selected_partner_id == p.id %}selected{% endif %}>
+                        {{ p.get_full_name|default:p.username }} ({{ p.username }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div style="min-width: 220px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                Filter by Category:
+            </label>
+            <select name="category" class="scope-select" style="width: 100%; max-width: 100%;">
+                <option value="">All Categories</option>
+                {% for code, label in categories %}
+                    <option value="{{ code }}" {% if selected_category == code %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn-magento-primary" style="padding: 7px 16px;">
+                Apply Filters
+            </button>
+            {% if selected_partner_id or selected_category %}
+                <a href="{% url 'investment_list' %}" class="btn-magento-secondary" style="padding: 7px 14px;">
+                    Reset
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Total Filtered Amount Box -->
+        <div style="margin-left: auto; text-align: right; background: var(--med-user-pill-bg); border: 1px solid var(--med-border); border-radius: 0; padding: 6px 16px;">
+            <div style="font-size: 11px; color: var(--med-text-muted); font-weight: 600; text-transform: uppercase;">
+                Ledger Total ({{ total_count }} Entries)
+            </div>
+            <div style="font-size: 18px; font-weight: 800; color: var(--stat-emerald);">
+                ₹{{ total_filtered_amount|floatformat:2 }}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Investments Table -->
+<div class="magento-card">
+    <div class="grid-wrapper">
+        <table class="magento-table">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Date</th>
+                    <th style="width: 180px;">Partner</th>
+                    <th>Purpose / What was Paid For</th>
+                    <th style="width: 190px;">Category</th>
+                    <th style="width: 130px;">Payment Mode</th>
+                    <th style="width: 140px;">Ref / Bill No.</th>
+                    <th style="text-align: right; width: 140px;">Amount (₹)</th>
+                    <th style="text-align: right; width: 130px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inv in investments %}
+                <tr>
+                    <td style="color: var(--med-text-muted); white-space: nowrap;">
+                        {{ inv.payment_date|date:"M d, Y" }}
+                    </td>
+                    <td>
+                        <strong style="color: var(--med-text-main);">{{ inv.partner.get_full_name|default:inv.partner.username }}</strong>
+                        <div style="font-size: 11px; color: var(--med-text-muted);">@{{ inv.partner.username }}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--med-text-main);">
+                            {{ inv.purpose }}
+                        </div>
+                        {% if inv.notes %}
+                            <div style="font-size: 11.5px; color: var(--med-text-muted); margin-top: 3px;">
+                                {{ inv.notes }}
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="type-tag">{{ inv.get_category_display }}</span>
+                    </td>
+                    <td>
+                        <span class="role-code-tag">{{ inv.get_payment_mode_display }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px;">
+                        {{ inv.reference_number|default:"-" }}
+                    </td>
+                    <td style="text-align: right; font-weight: 700; color: var(--stat-emerald); font-size: 14px; white-space: nowrap;">
+                        ₹{{ inv.amount|floatformat:2 }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'investment_edit' inv.pk %}" class="btn-magento-secondary btn-xs">Edit</a>
+                        <a href="{% url 'investment_delete' inv.pk %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="table-empty-cell">
+                        No investment records found matching the criteria. Click <strong>+ Record New Investment</strong> to log an expense.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,209 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}{{ partner.get_full_name|default:partner.username }} - Partner Details - MediDine{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">{{ partner.get_full_name|default:partner.username }}</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Partner profile and itemized spend history.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'partner_list' %}" class="btn-magento-secondary">
+            ← Back to Partners
+        </a>
+        <a href="{% url 'investment_create' %}?partner_id={{ partner.id }}&next={% url 'partner_detail' partner.id %}" class="btn-magento-primary">
+            + Add Spend
+        </a>
+    </div>
+</div>
+
+<!-- Partner Information Card -->
+<div class="magento-card" style="margin-bottom: 22px;">
+    <div class="magento-card-header">
+        <h2 class="magento-card-title">Partner Information</h2>
+        <a href="{% url 'user_edit' partner.pk %}" class="btn-magento-secondary btn-xs">Edit Info</a>
+    </div>
+
+    <div style="padding: 20px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Full Name
+            </div>
+            <div style="font-size: 15px; font-weight: 700; color: var(--med-text-heading); margin-top: 4px;">
+                {{ partner.get_full_name|default:"-" }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Account Username
+            </div>
+            <div style="margin-top: 4px;">
+                <span class="classy-tag">@{{ partner.username }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Phone Number
+            </div>
+            <div style="font-size: 14px; font-weight: 600; color: var(--med-text-main); margin-top: 4px;">
+                {{ partner.phone|default:"-" }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Email Address
+            </div>
+            <div style="font-size: 14px; color: var(--med-text-main); margin-top: 4px;">
+                {{ partner.email|default:"-" }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                Date Joined
+            </div>
+            <div style="font-size: 13.5px; color: var(--med-text-muted); margin-top: 4px;">
+                {{ partner.date_joined|date:"M d, Y" }}
+            </div>
+        </div>
+
+        <div>
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--med-text-muted); letter-spacing: 0.5px;">
+                All-Time Total Spend
+            </div>
+            <div style="font-size: 19px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 2px;">
+                ₹{{ all_time_total|floatformat:2 }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Date Filter Bar -->
+<div class="magento-card" id="partnerSpendsFilterPanel" style="padding: 16px 20px; margin-bottom: 22px;">
+    <form method="get" action="{% url 'partner_detail' partner.id %}" style="display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap;">
+        {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+        {% if per_page %}<input type="hidden" name="per_page" value="{{ per_page }}">{% endif %}
+        <!-- From Date -->
+        <div style="min-width: 170px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                From Date:
+            </label>
+            <input type="date" name="from_date" value="{{ from_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- To Date -->
+        <div style="min-width: 170px;">
+            <label style="display: block; font-size: 12px; font-weight: 600; color: var(--med-field-label); margin-bottom: 5px;">
+                To Date:
+            </label>
+            <input type="date" name="to_date" value="{{ to_date }}" class="scope-select" style="width: 100%; max-width: 100%;">
+        </div>
+
+        <!-- Filter Buttons -->
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn-magento-primary" style="padding: 7px 16px;">
+                Filter
+            </button>
+            {% if from_date or to_date %}
+                <a href="{% url 'partner_detail' partner.id %}" class="btn-magento-secondary" style="padding: 7px 14px;">
+                    Clear Filter
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- Filtered Total Amount Display -->
+        <div style="margin-left: auto; text-align: right; background: var(--med-card-subtle); border: 1px solid var(--med-border); border-radius: 0; padding: 6px 18px;">
+            <div style="font-size: 11px; color: var(--med-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;">
+                {% if from_date or to_date %}Filtered Spend{% else %}Total Spend{% endif %} ({{ filtered_count }} entries)
+            </div>
+            <div style="font-size: 17px; font-weight: 700; color: var(--med-text-heading); font-variant-numeric: tabular-nums; margin-top: 1px;">
+                ₹{{ total_filtered_amount|floatformat:2 }}
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Respective Partner's Spends Table -->
+<div class="magento-card">
+    <div class="magento-card-header">
+        <h2 class="magento-card-title">
+            Spends & Payments by {{ partner.get_full_name|default:partner.username }}
+        </h2>
+        <a href="{% url 'investment_create' %}?partner_id={{ partner.id }}&next={% url 'partner_detail' partner.id %}" class="btn-magento-primary btn-xs">
+            + Add Spend
+        </a>
+    </div>
+
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="partner_spends" has_filters=True filter_panel_id="partnerSpendsFilterPanel" table_id="partnerSpendsTable" export_filename="partner_spends" search_placeholder="Search by keyword" search_tooltip="Search spends by purpose, reference, or category" %}
+
+    <div class="grid-wrapper">
+        <table class="magento-table" id="partnerSpendsTable">
+            <thead>
+                <tr>
+                    <th style="width: 110px;">Date</th>
+                    <th>Paid For / Purpose</th>
+                    <th style="width: 200px;">Category</th>
+                    <th style="width: 130px;">Payment Mode</th>
+                    <th style="width: 130px;">Bill / Ref No.</th>
+                    <th style="text-align: right; width: 140px;">Amount (₹)</th>
+                    <th style="text-align: right; width: 130px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in spends %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap;">
+                        {{ s.payment_date|date:"M d, Y" }}
+                    </td>
+                    <td>
+                        <div class="table-primary-text">{{ s.purpose }}</div>
+                        {% if s.notes %}
+                            <div class="table-sub-text" style="margin-top: 3px;">
+                                {{ s.notes }}
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="classy-tag">{{ s.get_category_display }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px;">
+                        {{ s.get_payment_mode_display }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px; font-variant-numeric: tabular-nums;">
+                        {{ s.reference_number|default:"—" }}
+                    </td>
+                    <td class="cell-amount">
+                        ₹{{ s.amount|floatformat:2 }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'investment_edit' s.pk %}?next={% url 'partner_detail' partner.id %}" class="btn-magento-secondary btn-xs">
+                            Edit
+                        </a>
+                        <a href="{% url 'investment_delete' s.pk %}?next={% url 'partner_detail' partner.id %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        {% if from_date or to_date %}
+                            No spends recorded for <strong>{{ partner.get_full_name|default:partner.username }}</strong> between {{ from_date }} and {{ to_date }}.
+                        {% else %}
+                            No spends recorded for <strong>{{ partner.get_full_name|default:partner.username }}</strong> yet. Click <strong>+ Add Spend</strong> to add one.
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

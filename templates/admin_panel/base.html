@@ -1,0 +1,359 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Doctor's Zaika — GMCH Sundargarh{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem('medidine_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="admin-wrapper">
+    <!-- Left Vertical Sidebar (Magento 2 Style) -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <!-- Brand Logo -->
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-brand" title="Doctor's Zaika @ Singha's Den — GMCH Sundargarh">
+            <img src="{% static 'images/logo.png' %}" alt="Doctor's Zaika Logo" class="sidebar-brand-img" width="44" height="44">
+        </a>
+
+        <!-- Vertical Menu Navigation -->
+        <ul class="sidebar-nav">
+            <!-- 1. DASHBOARD -->
+            <li class="nav-item">
+                <a href="{% url 'admin_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' or request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    </span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+
+            <!-- 2. PARTNERS -->
+            {% if user.can_manage_users or user.is_partner %}
+            <li class="nav-item">
+                <a href="{% url 'partner_list' %}" class="nav-link {% if request.resolver_match.url_name == 'partner_list' or request.resolver_match.url_name == 'partner_create' or request.resolver_match.url_name == 'partner_detail' %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                    </span>
+                    <span class="nav-text">Partners</span>
+                </a>
+            </li>
+
+            <!-- 3. ALL SPENDS (With Partner & Date Filters) -->
+            <li class="nav-item">
+                <a href="{% url 'all_spends' %}" class="nav-link {% if request.resolver_match.url_name == 'all_spends' or 'investment' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                    </span>
+                    <span class="nav-text">All Spends</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- 3. USERS (Partners & Admins Only) -->
+            {% if user.can_manage_users %}
+            <li class="nav-item">
+                <a href="{% url 'user_list' %}" class="nav-link {% if request.resolver_match.url_name == 'user_list' or request.resolver_match.url_name == 'user_create' or request.resolver_match.url_name == 'user_edit' %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    </span>
+                    <span class="nav-text">Users</span>
+                </a>
+            </li>
+
+            <!-- 3. USER ROLES (Partners & Admins Only) -->
+            <li class="nav-item">
+                <a href="{% url 'role_list' %}" class="nav-link {% if 'role' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    </span>
+                    <span class="nav-text">User Roles</span>
+                </a>
+            </li>
+            {% endif %}
+
+            <!-- 3. STUDENT TYPES -->
+            <li class="nav-item">
+                <a href="{% url 'student_type_list' %}" class="nav-link {% if 'student_type' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+                    </span>
+                    <span class="nav-text">Student Types</span>
+                </a>
+            </li>
+
+            <!-- 4. STUDENTS (Subscribers) -->
+            <li class="nav-item">
+                <a href="{% url 'student_list' %}" class="nav-link {% if request.resolver_match.url_name == 'student_list' or request.resolver_match.url_name == 'student_create' or request.resolver_match.url_name == 'student_edit' or request.resolver_match.url_name == 'student_detail' %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                    </span>
+                    <span class="nav-text">Students</span>
+                </a>
+            </li>
+
+            <!-- 5. NON-SUB REGISTER (Walk-in Daily Students) -->
+            <li class="nav-item">
+                <a href="{% url 'non_sub_register' %}" class="nav-link {% if 'non_sub' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm-4 8H7v-2h6v2z"/></svg>
+                    </span>
+                    <span class="nav-text">Non-Sub Register</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Mobile Backdrop Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Right Content Area -->
+    <div class="admin-main">
+        <!-- Top Header Bar (Single Unified Line) -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <!-- Hamburger menu button for mobile -->
+                <button class="hamburger-btn" id="mobileMenuBtn" aria-label="Toggle Navigation">☰</button>
+                <div class="topbar-brand-notice">
+                    <span class="notice-badge">🩺</span>
+                    <span>Doctor's Zaika @ Singha's Den &bull; <strong>GMCH Sundargarh Medical Dining Online</strong></span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <!-- Theme Mode Toggle (Dark / Light) -->
+                <button class="theme-toggle-btn" id="themeToggleBtn" type="button" title="Switch between Dark & Light Theme" aria-label="Toggle Theme">
+                    <span class="theme-icon" id="themeIcon">🌙</span>
+                    <span id="themeLabel" style="font-size: 11.5px;">Theme</span>
+                </button>
+
+                <!-- Search Icon -->
+                <button class="header-action-icon" title="Search">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                </button>
+
+                <!-- Notifications with Badge -->
+                <button class="header-action-icon" title="Notifications">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <span class="notification-count">1</span>
+                </button>
+
+                <!-- User Profile & Sign Out -->
+                <div class="user-profile-menu">
+                    <div class="user-avatar-icon">👤</div>
+                    <span class="username-text">
+                        <strong>{{ user.username }}</strong>
+                        {% if user.role %}
+                            <span class="role-badge role-{{ user.role.code|lower }}">{{ user.role.name }}</span>
+                        {% endif %}
+                    </span>
+                    <a href="{% url 'logout' %}" class="btn-signout">Sign Out</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Body Content -->
+        <div class="admin-content">
+            {% if messages %}
+                <div class="alert-messages">
+                    {% for message in messages %}
+                        <div class="magento-alert magento-alert-{{ message.tags }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Drawer & Theme Switcher Scripts -->
+<script>
+    // 1. Mobile Sidebar Drawer Logic
+    const menuBtn = document.getElementById('mobileMenuBtn');
+    const sidebar = document.getElementById('adminSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    if (menuBtn && sidebar && overlay) {
+        menuBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('active');
+        });
+    }
+
+    // 2. Dark / Light Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function updateThemeUI(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('medidine_theme', theme);
+        if (themeIcon && themeLabel) {
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeLabel.textContent = 'Light';
+                themeToggleBtn.setAttribute('title', 'Switch to Light Theme');
+            } else {
+                themeIcon.textContent = '🌙';
+                themeLabel.textContent = 'Dark';
+                themeToggleBtn.setAttribute('title', 'Switch to Dark Theme');
+            }
+        }
+    }
+
+    // Read initial theme and update toggle button appearance
+    const initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    updateThemeUI(initialTheme);
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const nextTheme = current === 'dark' ? 'light' : 'dark';
+            updateThemeUI(nextTheme);
+        });
+    }
+
+    // 3. Magento 2 Data Grid Toolbar Helpers
+    function toggleGridDropdown(btn) {
+        const menu = btn.nextElementSibling;
+        const wasOpen = menu.classList.contains('show');
+        document.querySelectorAll('.grid-dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        if (!wasOpen) {
+            menu.classList.add('show');
+        }
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.grid-dropdown-wrap')) {
+            document.querySelectorAll('.grid-dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        }
+    });
+
+    function toggleGridFilters(panelId, btn) {
+        const panel = document.getElementById(panelId);
+        if (panel) {
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                if (btn) btn.classList.add('active');
+            } else {
+                panel.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            }
+        }
+    }
+
+    function setTableViewMode(mode, item) {
+        document.querySelectorAll('.magento-table').forEach(table => {
+            if (mode === 'compact') {
+                table.style.fontSize = '11px';
+                table.querySelectorAll('th, td').forEach(c => c.style.padding = '6px 10px');
+            } else {
+                table.style.fontSize = '';
+                table.querySelectorAll('th, td').forEach(c => c.style.padding = '');
+            }
+        });
+        const parent = item.parentElement;
+        parent.querySelectorAll('.grid-dropdown-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        parent.classList.remove('show');
+    }
+
+    function promptCustomPageSize(pageParam, currentVal) {
+        const customVal = prompt('Enter custom page size (e.g. 5 to 500 records per page):', currentVal || '20');
+        if (customVal !== null && customVal.trim() !== '') {
+            let num = parseInt(customVal.trim(), 10);
+            if (!isNaN(num) && num > 0) {
+                if (num > 1000) num = 1000;
+                const url = new URL(window.location.href);
+                url.searchParams.set('per_page', num);
+                url.searchParams.set(pageParam || 'page', '1');
+                window.location.href = url.toString();
+            } else {
+                alert('Please enter a valid positive number for page size.');
+            }
+        }
+    }
+
+    function changeGridPerPage(select, pageParam) {
+        if (select.value === 'custom') {
+            const currentVal = select.getAttribute('data-current') || '20';
+            promptCustomPageSize(pageParam, currentVal);
+            select.value = currentVal;
+            return;
+        }
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', select.value);
+        url.searchParams.set(pageParam || 'page', '1');
+        window.location.href = url.toString();
+    }
+
+    function handlePageJump(form, pageParam, maxPages) {
+        const input = form.querySelector('input[name="' + (pageParam || 'page') + '"]');
+        if (!input) return true;
+        let page = parseInt(input.value, 10);
+        if (isNaN(page) || page < 1) page = 1;
+        if (maxPages && page > maxPages) page = maxPages;
+        input.value = page;
+        return true;
+    }
+
+    function handleGridMassAction(select, tableId, filename) {
+        const val = select.value;
+        if (val === 'export') {
+            exportGridTableToCSV(tableId, filename);
+        } else if (val === 'print') {
+            window.print();
+        }
+        select.value = '';
+    }
+
+    function exportGridTableToCSV(tableId, filename) {
+        const table = document.getElementById(tableId) || document.querySelector('.magento-table');
+        if (!table) {
+            alert('No table data to export');
+            return;
+        }
+        const rows = table.querySelectorAll('tr');
+        const csv = [];
+        for (let i = 0; i < rows.length; i++) {
+            const row = [], cols = rows[i].querySelectorAll('th, td');
+            const count = cols.length > 1 ? cols.length - 1 : cols.length;
+            for (let j = 0; j < count; j++) {
+                let text = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, ' ').replace(/\s+/g, ' ').trim();
+                text = text.replace(/"/g, '""');
+                row.push('"' + text + '"');
+            }
+            if (row.length > 0) {
+                csv.push(row.join(','));
+            }
+        }
+        const csvString = csv.join('\n');
+        const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', (filename || 'export') + '_' + new Date().toISOString().slice(0, 10) + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

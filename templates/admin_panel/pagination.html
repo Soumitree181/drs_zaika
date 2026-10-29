@@ -1,0 +1,93 @@
+{% if page_obj and page_obj.paginator.num_pages > 1 %}
+<div class="magento-pagination-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-top: 1px solid var(--med-table-border); background: var(--med-surface-bg); flex-wrap: wrap; gap: 10px;">
+    <div style="font-size: 12.5px; color: var(--med-text-muted);">
+        Showing <strong>{{ page_obj.start_index }}</strong> to <strong>{{ page_obj.end_index }}</strong> of <strong>{{ page_obj.paginator.count }}</strong> entries
+    </div>
+    
+    <div style="display: flex; gap: 6px; align-items: center;">
+        <!-- Per page select with Custom option -->
+        <select class="grid-control-select grid-per-page-select" 
+                data-current="{{ per_page|default:20 }}"
+                onchange="changeGridPerPage(this, '{{ page_param|default:'page' }}')" 
+                title="Items per page">
+            <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+            <option value="20" {% if per_page == 20 or not per_page %}selected{% endif %}>20</option>
+            <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+            {% if per_page and per_page != 10 and per_page != 20 and per_page != 50 and per_page != 100 %}
+                <option value="{{ per_page }}" selected>{{ per_page }} (Custom)</option>
+            {% endif %}
+            <option value="custom">Custom...</option>
+        </select>
+        <span class="grid-per-page-label">per page</span>
+        <button type="button" 
+                class="btn-custom-size" 
+                onclick="promptCustomPageSize('{{ page_param|default:'page' }}', '{{ per_page|default:20 }}')"
+                title="Set custom page size">
+            Custom
+        </button>
+
+        <!-- Prev button -->
+        {% if page_obj.has_previous %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != page_param|default:'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}{{ page_param|default:'page' }}={{ page_obj.previous_page_number }}" class="grid-page-btn" title="Previous Page">&lt;</a>
+        {% else %}
+            <span class="grid-page-btn disabled">&lt;</span>
+        {% endif %}
+
+        <!-- Current page input -->
+        <form method="get" style="display: inline-flex; margin: 0;" onsubmit="return handlePageJump(this, '{{ page_param|default:'page' }}', {{ page_obj.paginator.num_pages|default:1 }})">
+            {% for key, val in request.GET.items %}
+                {% if key != page_param|default:'page' %}
+                    <input type="hidden" name="{{ key }}" value="{{ val }}">
+                {% endif %}
+            {% endfor %}
+            <input type="text" 
+                   name="{{ page_param|default:'page' }}" 
+                   value="{{ page_obj.number }}" 
+                   class="grid-page-input" 
+                   title="Jump to page (press Enter)">
+        </form>
+
+        <span class="grid-page-total">of {{ page_obj.paginator.num_pages }}</span>
+
+        <!-- Next button -->
+        {% if page_obj.has_next %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != page_param|default:'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}{{ page_param|default:'page' }}={{ page_obj.next_page_number }}" class="grid-page-btn" title="Next Page">&gt;</a>
+        {% else %}
+            <span class="grid-page-btn disabled">&gt;</span>
+        {% endif %}
+    </div>
+</div>
+{% elif page_obj and page_obj.paginator.count > 0 %}
+<div class="magento-pagination-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-top: 1px solid var(--med-table-border); background: var(--med-surface-bg); flex-wrap: wrap; gap: 10px;">
+    <div style="font-size: 12px; color: var(--med-text-muted);">
+        Showing all <strong>{{ page_obj.paginator.count }}</strong> entries
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center;">
+        <select class="grid-control-select grid-per-page-select" 
+                data-current="{{ per_page|default:20 }}"
+                onchange="changeGridPerPage(this, '{{ page_param|default:'page' }}')" 
+                title="Items per page">
+            <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+            <option value="20" {% if per_page == 20 or not per_page %}selected{% endif %}>20</option>
+            <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+            {% if per_page and per_page != 10 and per_page != 20 and per_page != 50 and per_page != 100 %}
+                <option value="{{ per_page }}" selected>{{ per_page }} (Custom)</option>
+            {% endif %}
+            <option value="custom">Custom...</option>
+        </select>
+        <span class="grid-per-page-label">per page</span>
+        <button type="button" 
+                class="btn-custom-size" 
+                onclick="promptCustomPageSize('{{ page_param|default:'page' }}', '{{ per_page|default:20 }}')"
+                title="Set custom page size">
+            Custom
+        </button>
+        <span class="grid-page-btn disabled">&lt;</span>
+        <span class="grid-page-input" style="display: inline-flex; align-items: center; justify-content: center; line-height: 28px;">1</span>
+        <span class="grid-page-total">of 1</span>
+        <span class="grid-page-btn disabled">&gt;</span>
+    </div>
+</div>
+{% endif %}

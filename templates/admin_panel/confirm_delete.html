@@ -1,0 +1,25 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Confirm Delete - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Confirm Deletion</h1>
+    </div>
+</div>
+
+<div class="magento-card" style="max-width: 550px; margin: 20px auto; padding: 30px; text-align: center;">
+    <div style="font-size: 32px; color: #dc2626; margin-bottom: 12px;">⚠️</div>
+    <h3 style="font-size: 16px; font-weight: 600; color: var(--med-text-heading); margin-bottom: 8px;">Are you sure you want to delete this record?</h3>
+    <p style="color: var(--med-text-muted); font-size: 13px; margin-bottom: 24px;">
+        You are about to delete <strong>{{ item_name }}</strong>. This action cannot be reverted.
+    </p>
+
+    <form method="post" style="display: flex; gap: 10px; justify-content: center;">
+        {% csrf_token %}
+        <button type="submit" class="btn-magento-danger">Yes, Delete Record</button>
+        <a href="{% url cancel_url %}" class="btn-magento-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Non-Subscription Register — Doctor's Zaika{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Non-Subscription Student Register</h1>
+        <p style="font-size: 13px; color: var(--med-text-muted); margin-top: 4px;">
+            Itemized daily register of walk-in non-subscription students purchasing individual meals.
+        </p>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'non_sub_create' %}" class="btn-magento-primary">
+            + Log New Student Meal
+        </a>
+    </div>
+</div>
+
+<!-- Register Summary KPI Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px;">
+    <!-- Today's Total -->
+    <div class="magento-card" style="padding: 16px 20px; border-left: 4px solid var(--med-teal-primary);">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--med-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+            Today's Collection ({{ today_str }})
+        </div>
+        <div style="font-size: 24px; font-weight: 800; color: var(--stat-emerald); margin-top: 4px; font-variant-numeric: tabular-nums;">
+            ₹{{ today_revenue|floatformat:2 }}
+        </div>
+        <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 2px;">
+            <strong>{{ today_count }}</strong> meals served today
+        </div>
+    </div>
+
+    <!-- Filtered Total Amount -->
+    <div class="magento-card" style="padding: 16px 20px; border-left: 4px solid #3b82f6;">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--med-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+            Register Total (Filtered)
+        </div>
+        <div style="font-size: 24px; font-weight: 800; color: var(--med-text-heading); margin-top: 4px; font-variant-numeric: tabular-nums;">
+            ₹{{ total_amount|floatformat:2 }}
+        </div>
+        <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 2px;">
+            Across <strong>{{ total_count }}</strong> total entries
+        </div>
+    </div>
+
+    <!-- Veg vs Non-Veg Count -->
+    <div class="magento-card" style="padding: 16px 20px; border-left: 4px solid #10b981;">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--med-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+            Diet Breakdown
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 12px; margin-top: 6px;">
+            <div>
+                <span style="font-size: 20px; font-weight: 800; color: #10b981;">{{ veg_count }}</span>
+                <span style="font-size: 11.5px; color: var(--med-text-muted); margin-left: 2px;">Veg</span>
+            </div>
+            <div style="color: var(--med-border); font-size: 16px;">|</div>
+            <div>
+                <span style="font-size: 20px; font-weight: 800; color: #f59e0b;">{{ non_veg_count }}</span>
+                <span style="font-size: 11.5px; color: var(--med-text-muted); margin-left: 2px;">Non-Veg</span>
+            </div>
+        </div>
+        <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 4px;">
+            Meal preferences logged
+        </div>
+    </div>
+
+    <!-- Payment Breakdown -->
+    <div class="magento-card" style="padding: 16px 20px; border-left: 4px solid #8b5cf6;">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--med-text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+            Payment Split
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 12px; margin-top: 6px;">
+            <div>
+                <span style="font-size: 18px; font-weight: 800; color: var(--med-teal-primary);">₹{{ online_total|floatformat:0 }}</span>
+                <span style="font-size: 11px; color: var(--med-text-muted); margin-left: 2px;">Online</span>
+            </div>
+            <div style="color: var(--med-border); font-size: 16px;">|</div>
+            <div>
+                <span style="font-size: 18px; font-weight: 800; color: #64748b;">₹{{ cash_total|floatformat:0 }}</span>
+                <span style="font-size: 11px; color: var(--med-text-muted); margin-left: 2px;">Cash</span>
+            </div>
+        </div>
+        <div style="font-size: 12px; color: var(--med-text-muted); margin-top: 4px;">
+            Collection methods
+        </div>
+    </div>
+</div>
+
+<!-- Quick Entry Bar (Direct Cashier Form) -->
+<div class="magento-card" style="padding: 16px 20px; margin-bottom: 20px;">
+    <div style="font-size: 13px; font-weight: 700; color: var(--med-text-heading); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+        <span>⚡ Quick Register Entry (Non-Subscription Student)</span>
+        <span style="font-size: 11.5px; font-weight: normal; color: var(--med-text-muted);">Instant submission to today's register</span>
+    </div>
+    <form method="post" action="{% url 'non_sub_create' %}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) 110px; gap: 10px; align-items: flex-end;">
+        {% csrf_token %}
+        <input type="hidden" name="date" value="{{ today_str }}">
+
+        <!-- Meal Type -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Meal *</label>
+            <select name="meal_type" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="BREAKFAST">Breakfast</option>
+                <option value="LUNCH" selected>Lunch</option>
+                <option value="DINNER">Dinner</option>
+                <option value="SNACKS">Snacks</option>
+            </select>
+        </div>
+
+        <!-- Batch -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Batch *</label>
+            <input type="text" name="batch" class="form-control" placeholder="e.g. MBBS 2023" required style="height: 32px; padding: 2px 8px; font-size: 12px;">
+        </div>
+
+        <!-- Roll Number -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Roll No *</label>
+            <input type="text" name="roll_number" class="form-control" placeholder="e.g. 045" required style="height: 32px; padding: 2px 8px; font-size: 12px; text-transform: uppercase;">
+        </div>
+
+        <!-- Diet -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Veg / Non-Veg *</label>
+            <select name="diet" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="VEG" selected>Veg</option>
+                <option value="NON_VEG">Non-Veg</option>
+            </select>
+        </div>
+
+        <!-- Price -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Price (₹) *</label>
+            <input type="number" step="0.50" name="price" value="80.00" class="form-control" placeholder="80.00" required style="height: 32px; padding: 2px 8px; font-size: 12px;">
+        </div>
+
+        <!-- Mobile Last 3 Digits -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Mobile (Last 3) *</label>
+            <input type="text" name="mobile_last_3" class="form-control" placeholder="e.g. 849" maxlength="3" pattern="[0-9]{3}" required style="height: 32px; padding: 2px 8px; font-size: 12px;" title="Last 3 digits of student mobile">
+        </div>
+
+        <!-- Payment Mode -->
+        <div>
+            <label style="display: block; font-size: 11px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">Payment *</label>
+            <select name="payment_mode" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="ONLINE" selected>Online (UPI)</option>
+                <option value="CASH">Cash</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="btn-magento-primary" style="width: 100%; height: 32px; padding: 0 10px; font-size: 12px; font-weight: 700; white-space: nowrap;">
+                + Save
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Filters Bar -->
+<div class="magento-card" style="padding: 14px 20px; margin-bottom: 20px;">
+    <form method="get" action="{% url 'non_sub_register' %}" style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+        <!-- Date Filter -->
+        <div style="min-width: 150px;">
+            <label style="display: block; font-size: 11.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">
+                Date:
+            </label>
+            <input type="date" name="date" value="{{ selected_date }}" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+        </div>
+
+        <!-- Diet Filter -->
+        <div style="min-width: 130px;">
+            <label style="display: block; font-size: 11.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">
+                Diet:
+            </label>
+            <select name="diet" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="">All Diets</option>
+                <option value="VEG" {% if selected_diet == 'VEG' %}selected{% endif %}>Veg Only</option>
+                <option value="NON_VEG" {% if selected_diet == 'NON_VEG' %}selected{% endif %}>Non-Veg Only</option>
+            </select>
+        </div>
+
+        <!-- Payment Mode Filter -->
+        <div style="min-width: 140px;">
+            <label style="display: block; font-size: 11.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">
+                Payment Mode:
+            </label>
+            <select name="payment_mode" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="">All Payments</option>
+                <option value="ONLINE" {% if selected_payment_mode == 'ONLINE' %}selected{% endif %}>Online (UPI)</option>
+                <option value="CASH" {% if selected_payment_mode == 'CASH' %}selected{% endif %}>Cash</option>
+            </select>
+        </div>
+
+        <!-- Meal Type Filter -->
+        <div style="min-width: 130px;">
+            <label style="display: block; font-size: 11.5px; font-weight: 600; color: var(--med-field-label); margin-bottom: 4px;">
+                Meal Time:
+            </label>
+            <select name="meal_type" class="form-control" style="height: 32px; padding: 2px 8px; font-size: 12px;">
+                <option value="">All Meals</option>
+                <option value="BREAKFAST" {% if selected_meal_type == 'BREAKFAST' %}selected{% endif %}>Breakfast</option>
+                <option value="LUNCH" {% if selected_meal_type == 'LUNCH' %}selected{% endif %}>Lunch</option>
+                <option value="DINNER" {% if selected_meal_type == 'DINNER' %}selected{% endif %}>Dinner</option>
+                <option value="SNACKS" {% if selected_meal_type == 'SNACKS' %}selected{% endif %}>Snacks</option>
+            </select>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 8px;">
+            <button type="submit" class="btn-magento-primary" style="height: 32px; padding: 0 14px; font-size: 12px;">
+                Apply Filters
+            </button>
+            <a href="?date={{ today_str }}" class="btn-magento-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; display: inline-flex; align-items: center;">
+                Today Only
+            </a>
+            {% if selected_date or selected_diet or selected_payment_mode or selected_meal_type or q %}
+                <a href="{% url 'non_sub_register' %}" class="btn-magento-secondary" style="height: 32px; padding: 0 12px; font-size: 12px; display: inline-flex; align-items: center;">
+                    Reset
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Table Data Grid Card -->
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="non_sub_register" table_id="nonSubTable" export_filename="non_sub_student_register" search_placeholder="Search by keyword" search_tooltip="Search by roll number, batch, mobile last 3, or notes" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="nonSubTable">
+            <thead>
+                <tr>
+                    <th style="width: 100px;">Date</th>
+                    <th style="width: 100px;">Meal</th>
+                    <th style="width: 130px;">Batch</th>
+                    <th style="width: 140px;">Roll Number</th>
+                    <th style="width: 110px; text-align: center;">Veg / Non-Veg</th>
+                    <th style="width: 110px; text-align: right;">Price (₹)</th>
+                    <th style="width: 130px; text-align: center;">Mobile (Last 3)</th>
+                    <th style="width: 120px; text-align: center;">Payment Mode</th>
+                    <th>Notes / Ref</th>
+                    <th style="width: 120px;">Recorded By</th>
+                    <th style="text-align: right; width: 120px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in meals %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12px; white-space: nowrap;">
+                        {{ m.date|date:"d M Y" }}
+                    </td>
+                    <td>
+                        <span class="role-code-tag" style="font-size: 10.5px;">{{ m.get_meal_type_display }}</span>
+                    </td>
+                    <td>
+                        <span class="table-primary-text">{{ m.batch }}</span>
+                    </td>
+                    <td>
+                        <strong style="color: var(--med-text-heading); font-family: ui-monospace, monospace; font-size: 12.5px;">
+                            {{ m.roll_number }}
+                        </strong>
+                    </td>
+                    <td style="text-align: center;">
+                        {% if m.diet == 'VEG' %}
+                            <span class="status-active" style="background: rgba(16, 185, 129, 0.12); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; font-weight: 700; font-size: 11px;">
+                                🟢 VEG
+                            </span>
+                        {% else %}
+                            <span style="background: rgba(245, 158, 11, 0.12); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 8px; font-weight: 700; font-size: 11px;">
+                                🔴 NON-VEG
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right; font-weight: 800; font-size: 13.5px; color: var(--stat-emerald); font-variant-numeric: tabular-nums;">
+                        ₹{{ m.price|floatformat:2 }}
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="display: inline-flex; align-items: center; gap: 3px; font-family: ui-monospace, monospace; font-weight: 700; background: var(--med-user-pill-bg); border: 1px solid var(--med-border); padding: 2px 8px; font-size: 11.5px; color: var(--med-text-main);">
+                            <span style="color: var(--med-text-muted); font-weight: normal;">•••</span> {{ m.mobile_last_3 }}
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        {% if m.payment_mode == 'ONLINE' %}
+                            <span style="display: inline-flex; align-items: center; gap: 4px; color: var(--med-teal-primary); font-size: 11px; font-weight: 700;">
+                                📱 Online
+                            </span>
+                        {% else %}
+                            <span style="display: inline-flex; align-items: center; gap: 4px; color: #64748b; font-size: 11px; font-weight: 700;">
+                                💵 Cash
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12px;">
+                        {{ m.notes|default:"—" }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 11.5px;">
+                        @{{ m.recorded_by.username|default:"System" }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'non_sub_edit' m.pk %}" class="btn-magento-secondary btn-xs">Edit</a>
+                        <a href="{% url 'non_sub_delete' m.pk %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="table-empty-cell">
+                        No non-subscription student meal records found matching the filter.
+                        Use the <strong>Quick Register Entry</strong> bar above to log a walk-in student meal.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}

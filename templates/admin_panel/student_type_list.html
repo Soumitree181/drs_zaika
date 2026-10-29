@@ -1,0 +1,62 @@
+{% extends "admin_panel/base.html" %}
+
+{% block title %}Student Types - MediDine Admin{% endblock %}
+
+{% block content %}
+<div class="content-header">
+    <div>
+        <h1 class="content-title">Student Types</h1>
+    </div>
+    <div class="header-actions">
+        <a href="{% url 'student_type_create' %}" class="btn-magento-primary">
+            + Add New Student Type
+        </a>
+    </div>
+</div>
+
+<div class="magento-card">
+    {% include "admin_panel/data_grid_toolbar.html" with grid_id="student_types" table_id="studentTypesTable" export_filename="student_types" search_placeholder="Search by keyword" search_tooltip="Search by name or description" %}
+    <div class="grid-wrapper">
+        <table class="magento-table" id="studentTypesTable">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">ID</th>
+                    <th style="width: 250px;">Student Type Name</th>
+                    <th>Description</th>
+                    <th style="width: 180px;">Created Date</th>
+                    <th style="text-align: right; width: 140px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for st in student_types %}
+                <tr>
+                    <td style="color: var(--med-text-muted); font-size: 12px; font-variant-numeric: tabular-nums;">
+                        {{ st.id }}
+                    </td>
+                    <td>
+                        <span class="table-primary-text">{{ st.name }}</span>
+                    </td>
+                    <td style="color: var(--med-text-muted);">
+                        {{ st.description|default:"—" }}
+                    </td>
+                    <td style="color: var(--med-text-muted); font-size: 12.5px; font-variant-numeric: tabular-nums;">
+                        {{ st.created_at|date:"M d, Y" }}
+                    </td>
+                    <td style="text-align: right; white-space: nowrap;">
+                        <a href="{% url 'student_type_edit' st.pk %}" class="btn-magento-secondary btn-xs">Edit</a>
+                        <a href="{% url 'student_type_delete' st.pk %}" class="btn-magento-danger btn-xs" style="margin-left: 4px;">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="table-empty-cell">
+                        We couldn't find any student types. Click <strong>+ Add New Student Type</strong> to define schemes like Monthly Basis or Meal Basis (Pay-per-meal).
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% include "admin_panel/pagination.html" %}
+</div>
+{% endblock %}
